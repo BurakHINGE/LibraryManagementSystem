@@ -52,7 +52,6 @@ public class User {
         }
 
         return result.toString().trim();
-
     }
 
     public String getUsername() {
@@ -74,5 +73,4 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
-    
 }
