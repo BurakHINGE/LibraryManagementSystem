@@ -14,27 +14,30 @@ public class MainMenu {
 
     public void showMainMenu() {
 
-        System.out.println("Kütüphaneye Hoş Geldiniz!");
-        System.out.println("1-Giriş Yap\n2-Kayıt Ol\n3-Çıkış Yap");
-        int secenek = input.nextInt();
-        input.nextLine();
-
-        while (secenek < 1 || secenek > 3) {
-            System.out.println("Lütfen geçerli bir işlem giriniz!");
+        while (true) {
+            System.out.println("Kütüphaneye Hoş Geldiniz!");
             System.out.println("1-Giriş Yap\n2-Kayıt Ol\n3-Çıkış Yap");
-            secenek = input.nextInt();
+            int secenek = input.nextInt();
             input.nextLine();
-        }
 
-        if (secenek == 3) { //exit program
-            auth.logout();
+            while (secenek < 1 || secenek > 3) {
+                System.out.println("Lütfen geçerli bir işlem giriniz!");
+                System.out.println("1-Giriş Yap\n2-Kayıt Ol\n3-Çıkış Yap");
+                secenek = input.nextInt();
+                input.nextLine();
+            }
+
+            if (secenek == 3) { //exit program
+                break;
+            }
+            else if (secenek == 2) { //register
+                registerMenu();
+            }
+            else if(secenek == 1) { //login
+                loginMenu();
+            }
         }
-        else if (secenek == 2) { //register
-            registerMenu();
-        }
-        else if(secenek == 1) { //login
-            loginMenu();
-        }
+        auth.logout();
     }
 
     public void registerMenu() {
@@ -42,6 +45,17 @@ public class MainMenu {
         System.out.println("-----Kayıt Ol-----");
         System.out.println("Kullanıcı Adı Seçiniz: ");
         String kullaniciAdi = input.nextLine();
+
+        boolean isCorrectUsername = auth.isAllowedUsername(kullaniciAdi);
+
+        while (!isCorrectUsername) {
+            System.out.println("Bu isimde başka bir kullanıcı adı bulunuyor lütfen farklı bir kullanıcı adı seçiniz.");
+            System.out.println("-----Kayıt Ol-----");
+            System.out.println("Kullanıcı Adı Seçiniz: ");
+            kullaniciAdi = input.nextLine();
+
+            isCorrectUsername = auth.isAllowedUsername(kullaniciAdi);
+       }
                 
         System.out.println("Şifre Belirleyiniz: ");
         String sifre = input.nextLine();
@@ -51,7 +65,6 @@ public class MainMenu {
         while (!(isCorrectPassword == 8)) {
 
             switch (isCorrectPassword) {
-                    
                 case 0: {
                     System.out.println("Şifreniz çok kısa lütfen en az 8 karakterli şifre oluşturun!");
                     System.out.println("Şifrenizi giriniz: ");
@@ -151,5 +164,4 @@ public class MainMenu {
 
         userMenu.showUserMenu(loggedInUser);
     }
-
 }
