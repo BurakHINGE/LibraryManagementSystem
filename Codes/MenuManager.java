@@ -1,12 +1,12 @@
 import java.util.Scanner;
 
-public class MainMenu {
+public class MenuManager {
     
     private Scanner input;
     private AuthenticationManager auth;
     private UserMenu userMenu;
 
-    public MainMenu(AuthenticationManager auth, UserMenu userMenu) {
+    public MenuManager(AuthenticationManager auth, UserMenu userMenu) {
         this.input = new Scanner(System.in);
         this.auth = auth;
         this.userMenu = userMenu;
@@ -160,6 +160,7 @@ public class MainMenu {
 
         if (loggedInUser == null) {
             System.out.println("Hatalı kullanıcı adı veya şifre!");
+            return;
         }
 
         userMenu.showUserMenu(loggedInUser);

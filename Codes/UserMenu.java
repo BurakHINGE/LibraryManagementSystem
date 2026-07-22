@@ -39,7 +39,17 @@ public class UserMenu {
                         System.out.println("Kitaplığınıza henüz kitap eklemediniz.");
                     }
                     else {
+                        System.out.println("-----Okuma Listeniz-----");
                         loggedInUser.listBooks();
+                        System.out.println("\n");
+
+                        System.out.println("Geri gelmek için \"1\": ");
+                        int exitList = input.nextInt();
+
+                        while (exitList != 1) {
+                            System.out.println("Geri gelmek için sadece 1'i tuşlayabilirsiniz: ");
+                            exitList = input.nextInt();
+                        }
                     }
                     break;
                 }
