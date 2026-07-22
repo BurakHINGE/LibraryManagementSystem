@@ -5,8 +5,8 @@
 ---
 
 ## 📌 Sürüm Bilgisi | Version Info  
- ● Current Version: 1.2.0
- ● Geçerli Sürüm: 1.2.0
+ ● Current Version: 1.2.1
+ ● Geçerli Sürüm: 1.2.1
 
 ---
  
@@ -135,7 +135,8 @@ java -cp ".;lib/json.jar;Codes" MainLibrary
 
 | Version | Date       | Description |
 |--------:|------------|-------------|
-| v1.2.0  | 2026-07-20 | Refactored the project structure by separating menu handling and username/password validation into dedicated classes / Proje yapısı yeniden düzenlendi; menü yönetimi ile kullanıcı adı ve şifre doğrulama işlemleri ayrı sınıflara taşındı |
+| v1.2.1  | 2026-07-22 | Reading list menu has been improved / Okuma listesi menüsü iyileştirildi |
+| v1.2.0  | 2026-07-20 | Refactored the project structure by separating menu handling and username/password validation into dedicated classes / Proje yapısı yeniden düzenlendi, menü yönetimi ile kullanıcı adı ve şifre doğrulama işlemleri ayrı sınıflara taşındı |
 | v1.1.0  | 2026-02-22 | Password requirements have been created / Şifre gereksinimleri eklendi |
 | v1.0.3  | 2026-02-21 | Min password length requirement has been added / Minimum şifre uzunluğu gerekliliği eklendi |
 | v1.0.2  | 2026-02-18 | Automatically capitalize the first letter of book and author names / Kitap ve yazar adlarının ilk harflerini otomatik büyütme eklendi |
