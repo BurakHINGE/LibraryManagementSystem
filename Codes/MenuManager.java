@@ -40,7 +40,7 @@ public class MenuManager {
         auth.logout();
     }
 
-    public void registerMenu() {
+    private void registerMenu() {
 
         System.out.println("-----Kayıt Ol-----");
         System.out.println("Kullanıcı Adı Seçiniz: ");
@@ -148,7 +148,7 @@ public class MenuManager {
         System.out.println("Tekrardan giriş yapmalısınız:");
     }
 
-    public void loginMenu() {
+    private void loginMenu() {
 
         System.out.println("Giriş yapmak için kullanıcı adınızı giriniz: ");
         String kullaniciAdi = input.nextLine();
