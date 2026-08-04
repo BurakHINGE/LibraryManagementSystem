@@ -12,10 +12,10 @@ public class User {
         this.bookList = new ArrayList<>();
     }
 
-    public boolean addBooks(String bookName, String authorName) {
+    public boolean addBooks(String bookName, String authorName, String category, String readInfo, int point) {
 
-        StringUtils.capitalizeWords(bookName);
-        StringUtils.capitalizeWords(authorName);
+        bookName = StringUtils.capitalizeWords(bookName);
+        authorName = StringUtils.capitalizeWords(authorName);
 
         for (Book book : bookList) {
     
@@ -26,7 +26,7 @@ public class User {
             }
         }
     
-        Book newBook = new Book(bookName, authorName);
+        Book newBook = new Book(bookName, authorName, category, readInfo, point);
         bookList.add(newBook);
     
         return true; 
@@ -35,7 +35,7 @@ public class User {
     public void listBooks() {
 
         for (Book book : bookList) {
-            System.out.println(book.getBookName() + " - " + book.getAuthorName());
+            System.out.println(book.getBookName() + " - " + book.getAuthorName() + " - " + book.getCategory() + " - " + book.getReadInfo() + " - " + book.getPoint());
         }
     }
 
