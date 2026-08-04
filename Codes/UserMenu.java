@@ -4,10 +4,12 @@ public class UserMenu {
 
     private Scanner input;
     private AuthenticationManager auth;
+    private MenuManager menuMan;
 
     public UserMenu(AuthenticationManager auth) {
         this.input = new Scanner(System.in);
         this.auth = auth;
+        this.menuMan = menuMan;
     }
 
     public void showUserMenu(User loggedInUser) {
@@ -63,7 +65,14 @@ public class UserMenu {
                         System.out.println("Kitabınızın yazarının adını giriniz: ");
                         String yazarAdi = input.nextLine();
 
-                        added = loggedInUser.addBooks(kitapAdi, yazarAdi);
+                        String kategori = categoryMenu();
+
+                        String okumaDurumu = readInfoMenu();
+
+                        System.out.println("Kitabınızı 10 üzerinden puanlayınız: ");
+                        int puan = input.nextInt();
+
+                        added = loggedInUser.addBooks(kitapAdi, yazarAdi, kategori, okumaDurumu, puan);
                         JsonManager.saveUsers(auth.getUsers());
 
                         if (!added) {
@@ -81,5 +90,83 @@ public class UserMenu {
                 break;
             }
         }
+    }
+
+    public String categoryMenu() {
+
+        System.out.println("1- Dünya Klasikleri\n2- Tarih\n3- Psikoloji\n4- Aşk\n5- Korku-Gelirim\n6- Bilim-Kurgu\n7- Polisiye\n8- Aksiyon-Macera\n9- Şiir\n10- Çocuk\n11- Felsefe\n12- Sosyoloji\n13- Biyografi\n14- Makale\n15- Deneme\n16- Bilim-Teknoloji");
+        System.out.println("Kitabınızın kategorisini giriniz: ");
+        int choose = input.nextInt();
+
+        switch (choose) {
+            case 1: {
+                return "Dünya Klasikleri";
+            }
+            case 2: {
+                return "Tarih";
+            }
+            case 3: {
+                return "Psikoloji";
+            }
+            case 4: {
+                return "Aşk";
+            }
+            case 5: {
+                return "Korku-Gerilim";
+            }
+            case 6: {
+                return "Bilim-Kurgu";
+            }
+            case 7: {
+                return "Polisiye";
+            }
+            case 8: {
+                return "Aksiyon-Macera";
+            }
+            case 9: {
+                return "Şiir";
+            }
+            case 10: {
+                return "Çocuk";
+            }
+            case 11: {
+                return "Felsefe";
+            }
+            case 12: {
+                return "Sosyoloji";
+            }
+            case 13: {
+                return "Biyografi";
+            }
+            case 14: {
+                return "Makale";
+            }
+            case 15: {
+                return "Deneme";
+            }
+            case 16: {
+                return "Bilim-Teknoloji";
+            }
+        }
+        return "";
+    }
+
+    public String readInfoMenu() {
+
+        System.out.println("1- Okudum\n2- Okuyorum\n 3- Okuyacağım\nKitabı okuma durumunuzu belirtiniz: ");
+        int choose = input.nextInt();
+
+        switch (choose) {
+            case 1: {
+                return "Okudum";
+            }
+            case 2: {
+                return "Okuyorum";
+            }
+            case 3: {
+                return "Okuyacağım";
+            }
+        }
+        return "";
     }
 }
