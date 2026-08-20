@@ -4,38 +4,42 @@ public class User {
 
     private String username;
     private String password;
-    private ArrayList<Book> bookList;
+    private ArrayList<ReadingRecord> bookshelf;
 
     public User(String username, String password) {
         this.username = username;
         this.password = password;
-        this.bookList = new ArrayList<>();
+        this.bookshelf = new ArrayList<>();
     }
 
-    public boolean addBooks(String bookName, String authorName, String category, String readInfo, int point) {
+    public boolean addBooks(ReadingRecord record) {
 
-        bookName = StringUtils.capitalizeWords(bookName);
-        authorName = StringUtils.capitalizeWords(authorName);
-
-        for (Book book : bookList) {
-    
-            if (book.getBookName().equalsIgnoreCase(bookName) &&
-                book.getAuthorName().equalsIgnoreCase(authorName)) {
-    
+        for (ReadingRecord book : bookshelf) {
+            if (book.getBook().getID() == record.getBook().getID()) {
                 return false; 
             }
         }
-    
-        Book newBook = new Book(bookName, authorName, category, readInfo, point);
-        bookList.add(newBook);
-    
+
+        bookshelf.add(record);
         return true; 
+    }
+
+    public boolean removeBooks(ReadingRecord record) {
+
+        for (ReadingRecord book : bookshelf) {
+            if (record.getBook().getID() == book.getBook().getID()) {
+                bookshelf.remove(record);
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public void listBooks() {
 
-        for (Book book : bookList) {
-            System.out.println(book.getBookName() + " - " + book.getAuthorName() + " - " + book.getCategory() + " - " + book.getReadInfo() + " - " + book.getPoint());
+        for (ReadingRecord book : bookshelf) {
+            System.out.println(book.getBook().getTitle() + " - " + book.getBook().getAuthorName() + " - " + book.getBook().getCategory() + " - " + book.getStatus() + " - " + book.getRating());
         }
     }
 
@@ -47,8 +51,8 @@ public class User {
         return password;
     }
 
-    public ArrayList<Book> getBooks() {
-        return bookList;
+    public ArrayList<ReadingRecord> getBooks() {
+        return bookshelf;
     }
 
     public void setUsername(String username) {
