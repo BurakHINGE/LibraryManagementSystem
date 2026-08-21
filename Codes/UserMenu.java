@@ -60,27 +60,34 @@ public class UserMenu {
 
                     while(!added) {
                         System.out.println("Eklemek istediğiniz kitabın adını giriniz: ");
-                        String kitapAdi = input.nextLine();
+                        String bookName = input.nextLine();
 
                         System.out.println("Kitabınızın yazarının adını giriniz: ");
-                        String yazarAdi = input.nextLine();
+                        String authorName = input.nextLine();
 
-                        String kategori = categoryMenu();
+                        String category = categoryMenu();
 
-                        String okumaDurumu = readInfoMenu();
+                        Book book = new Book(bookName, authorName, category);
+                        ReadingRecord record = new ReadingRecord(book, BookSource.PERSONAL);
+
+                        ReadingStatus status = readInfoMenu();
+                        record.setStatus(status);
 
                         System.out.println("Kitabınızı 10 üzerinden puanlayınız: ");
                         int puan = input.nextInt();
+                        input.nextLine();
 
-                        added = loggedInUser.addBooks(kitapAdi, yazarAdi, kategori, okumaDurumu, puan);
-                        JsonManager.saveUsers(auth.getUsers());
+                        record.setRating(puan);
+
+                        added = loggedInUser.addBooks(record);
 
                         if (!added) {
                             System.out.println("Bu kitap zaten kitaplığında bulunuyor.");
-                        }
+                        } 
                         else {
                             System.out.println("Kitabınız kitaplığınıza başarıyla eklendi.");
-                        } 
+                            JsonManager.saveUsers(auth.getUsers());
+                        }
                     }
                     break;
                 }
@@ -151,22 +158,26 @@ public class UserMenu {
         return "";
     }
 
-    public String readInfoMenu() {
+    public ReadingStatus readInfoMenu() {
 
-        System.out.println("1- Okudum\n2- Okuyorum\n 3- Okuyacağım\nKitabı okuma durumunuzu belirtiniz: ");
+        System.out.println("1- Okudum\n2- Okuyorum\n3- Okuyacağım\nKitabı okuma durumunuzu belirtiniz: ");
+    
         int choose = input.nextInt();
-
+        input.nextLine();
+    
         switch (choose) {
-            case 1: {
-                return "Okudum";
-            }
-            case 2: {
-                return "Okuyorum";
-            }
-            case 3: {
-                return "Okuyacağım";
-            }
+            case 1:
+                return ReadingStatus.READ;
+    
+            case 2:
+                return ReadingStatus.READING;
+    
+            case 3:
+                return ReadingStatus.WANT_TO_READ;
+    
+            default:
+                System.out.println("Geçersiz seçim!");
+                return null;
         }
-        return "";
     }
 }
