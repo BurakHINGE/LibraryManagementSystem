@@ -1,21 +1,21 @@
 public class Book {
     
-    private int id;
+    private static int nextID;
     private String title;
     private String authorName;
     private String category;
     private String readInfo;
     private int point;
 
-    public Book(int id, String title, String authorName, String category) {
-        this.id = id;
+    public Book(String title, String authorName, String category) {
+        this.nextID = nextID++;
         this.title = title;
         this.authorName = authorName;
         this.category = category;
     }
 
     public int getID() {
-        return id;
+        return nextID;
     }
     
     public String getTitle() {
@@ -36,10 +36,6 @@ public class Book {
 
     public int getPoint() {
         return point;
-    }
-
-    public void setID(int id) {
-        this.id = id;
     }
 
     public void setTitle(String bookName) {
