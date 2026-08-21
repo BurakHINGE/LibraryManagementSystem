@@ -1,21 +1,25 @@
 public class Book {
     
-    private String bookName;
+    private int id;
+    private String title;
     private String authorName;
     private String category;
     private String readInfo;
     private int point;
 
-    public Book(String bookName, String authorName, String category, String readInfo, int point) {
-        this.bookName = bookName;
+    public Book(int id, String title, String authorName, String category) {
+        this.id = id;
+        this.title = title;
         this.authorName = authorName;
         this.category = category;
-        this.readInfo = readInfo;
-        this.point = point;
     }
 
-    public String getBookName() {
-        return bookName;
+    public int getID() {
+        return id;
+    }
+    
+    public String getTitle() {
+        return title;
     }
 
     public String getAuthorName() {
@@ -34,8 +38,12 @@ public class Book {
         return point;
     }
 
-    public void setBookName(String bookName) {
-        this.bookName = bookName;
+    public void setID(int id) {
+        this.id = id;
+    }
+
+    public void setTitle(String bookName) {
+        this.title = bookName;
     }
 
     public void setAuthorName(String authorName) {
