@@ -5,8 +5,8 @@
 ---
 
 ## 📌 Sürüm Bilgisi | Version Info  
- ● Current Version: 1.3.0
- ● Geçerli Sürüm: 1.3.0
+ ● Current Version: 2.0.0
+ ● Geçerli Sürüm: 2.0.0
 
 ---
  
@@ -135,6 +135,7 @@ java -cp ".;lib/json.jar;Codes" MainLibrary
 
 | Version | Date       | Description |
 |--------:|------------|-------------|
+| v2.0.0  | 2026-08-21 | Redesigned the library and bookshelf system. Added ReadingRecord, LibraryBook, reading status, book source tracking and Borrowable interface / Kütüphane ve kitaplık sistemi yeniden tasarlandı. ReadingRecord, LibraryBook, okuma durumu, kitap kaynağı takibi ve Borrowable interface’i eklendi. |
 | v1.3.0  | 2026-08-04 | Added category, reading status, and rating information for books / Kitaplar için kategori, okuma durumu ve puanlama eklendi |
 | v1.2.2  | 2026-08-03 | Bug has been fixed in capitalize words function / Capitalize word fonksiyonundaki bug düzeltildi |
 | v1.2.1  | 2026-07-22 | Reading list menu has been improved / Okuma listesi menüsü iyileştirildi |
