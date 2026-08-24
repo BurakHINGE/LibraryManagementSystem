@@ -5,11 +5,13 @@ public class User {
     private String username;
     private String password;
     private ArrayList<ReadingRecord> bookshelf;
+    private ArrayList<Loan> loans;
 
     public User(String username, String password) {
         this.username = username;
         this.password = password;
         this.bookshelf = new ArrayList<>();
+        this.loans = new ArrayList<>();
     }
 
     public boolean addBooks(ReadingRecord record) {
@@ -43,6 +45,10 @@ public class User {
         }
     }
 
+    public void addLoan(Loan loan) {
+        loans.add(loan);
+    }
+
     public String getUsername() {
         return username;
     }
@@ -53,6 +59,10 @@ public class User {
 
     public ArrayList<ReadingRecord> getBooks() {
         return bookshelf;
+    }
+
+    public ArrayList<Loan> getLoans() {
+        return loans;
     }
 
     public void setUsername(String username) {
