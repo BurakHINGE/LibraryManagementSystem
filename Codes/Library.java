@@ -3,9 +3,11 @@ import java.util.ArrayList;
 public class Library {
 
     private ArrayList<LibraryBook> books;
+    private int nextLoanID;
     
     public Library() {
-
+        books = new ArrayList<>();
+        nextLoanID = 1;
     }
 
     public boolean addBook(LibraryBook book) {
@@ -40,7 +42,7 @@ public class Library {
             }
         }
 
-        return books.get(id);
+        return null;
     }
 
     public boolean borrowBookFromLibrary(int bookID, User user) {
@@ -63,35 +65,35 @@ public class Library {
             return false;
         }
 
+        Loan createLoan = new Loan(nextLoanID, user, libraryBook);
+        nextLoanID++;
+        createLoan.borrow();
+        user.addLoan(createLoan);
         return true;
     }
 
-    public boolean returnBookToLibrary(int bookID, User user) {
+    public boolean returnBookToLibrary(int loanID, User user) {
 
-        LibraryBook libraryBook = findBook(bookID);
-
-        if (libraryBook == null) {
-            return false;
-        }
-
-        ReadingRecord targetRecord = null;
-
-        for (ReadingRecord record : user.getBooks()) {
-            if (record.getBook().getID() == bookID && record.getSource() == BookSource.LIBRARY) {
-                targetRecord = record;
+        Loan targetLoan = null;
+    
+        for (Loan loan : user.getLoans()) {
+            if (loan.getLoanID() == loanID && !loan.isReturned()) {
+                targetLoan = loan;
                 break;
             }
         }
-
-        if (targetRecord == null) {
+    
+        if (targetLoan == null) {
             return false;
         }
-
+    
+        LibraryBook libraryBook = targetLoan.getLibraryBook();
+    
         if (!libraryBook.returnBook()) {
             return false;
         }
-
-        user.removeBooks(targetRecord);
+    
+        targetLoan.returnBook();
         return true;
     }
     
