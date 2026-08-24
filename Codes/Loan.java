@@ -3,15 +3,15 @@ import java.time.LocalDate;
 
 public class Loan {
     
-    private int id;
+    private int loanID;
     private User user;
     private LibraryBook libraryBook;
     private LocalDate borrowDate;
     private LocalDate returnDate;
     private boolean returned;
 
-    public Loan(int id, User user, LibraryBook libraryBook) {
-        this.id = id;
+    public Loan(int loanID, User user, LibraryBook libraryBook) {
+        this.loanID = loanID;
         this.user = user;
         this.libraryBook = libraryBook;
         this.borrowDate = null;
@@ -40,13 +40,19 @@ public class Loan {
     }
 
     public boolean isReturned() {
+        return returned;
+    }
 
-        if (returned) {
-            return true;
-        }
-        else {
-            return false;
-        }
+    public int getLoanID() {
+        return loanID;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public LibraryBook getLibraryBook() {
+        return libraryBook;
     }
 
     public LocalDate getBorrowDate() {
