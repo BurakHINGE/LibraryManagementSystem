@@ -65,7 +65,7 @@ public class Library {
             return false;
         }
 
-        Loan createLoan = new Loan(nextLoanID, user, libraryBook);
+        Loan createLoan = new Loan(nextLoanID, libraryBook);
         nextLoanID++;
         createLoan.borrow();
         user.addLoan(createLoan);
