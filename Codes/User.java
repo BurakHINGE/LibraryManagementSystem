@@ -14,7 +14,7 @@ public class User {
         this.loans = new ArrayList<>();
     }
 
-    public boolean addBooks(ReadingRecord record) {
+    public boolean addBooks(ReadingRecord record) { // Add book to bookshelf
 
         for (ReadingRecord book : bookshelf) {
             if (book.getBook().getID() == record.getBook().getID()) {
@@ -26,7 +26,7 @@ public class User {
         return true; 
     }
 
-    public boolean removeBooks(ReadingRecord record) {
+    public boolean removeBooks(ReadingRecord record) { // Remove book from bookshelf
 
         for (ReadingRecord book : bookshelf) {
             if (record.getBook().getID() == book.getBook().getID()) {
@@ -38,14 +38,14 @@ public class User {
         return false;
     }
 
-    public void listBooks() {
+    public void listBooks() { // List books in the bookshelf
 
         for (ReadingRecord book : bookshelf) {
             System.out.println(book.getBook().getTitle() + " - " + book.getBook().getAuthorName() + " - " + book.getBook().getCategory() + " - " + book.getStatus() + " - " + book.getRating());
         }
     }
 
-    public void addLoan(Loan loan) {
+    public void addLoan(Loan loan) { // Add loan book from library
         loans.add(loan);
     }
 
