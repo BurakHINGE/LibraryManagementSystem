@@ -1,4 +1,4 @@
-public class LibraryBook implements Borrowable{
+public class LibraryBook implements Borrowable {
     
     private Book book;
     private int totalCopies;
@@ -10,7 +10,7 @@ public class LibraryBook implements Borrowable{
     }
 
     @Override
-    public boolean borrow() {
+    public boolean borrow() { // Check available copies and decrease 1
         
         if (availableCopies <= 0) {
             return false;
@@ -21,7 +21,7 @@ public class LibraryBook implements Borrowable{
     }
 
     @Override
-    public boolean returnBook() {
+    public boolean returnBook() { // Check total copies and increase 1
         
         if (availableCopies >= totalCopies) {
             return false;
