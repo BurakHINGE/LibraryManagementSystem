@@ -1,37 +1,37 @@
-import java.util.Scanner;
+
 
 public class UserMenu {
 
-    private Scanner input;
     private Library library;
     private AuthenticationManager auth;
     private MenuManager menuMan;
     private BookshelfMenu bookshelfMenu;
     private LibraryMenu libraryMenu;
+    private InputManager inputManager;
 
     public UserMenu(Library library, AuthenticationManager auth) {
-        this.input = new Scanner(System.in);
         this.auth = auth;
         this.menuMan = menuMan;
         bookshelfMenu = new BookshelfMenu(auth);
         libraryMenu = new LibraryMenu(library, auth);
+        this.inputManager = new InputManager();
     }
 
-    public void showUserMenu(User loggedInUser) {
+    public void showUserMenu(User loggedInUser) { // User Menu
 
         System.out.println("Ana Sayfaya Hoş Geldin " + loggedInUser.getUsername());
 
         while (true) {
             System.out.println("-----İşlem Seçiniz-----");
             System.out.println("1-Kitaplığınıza Girin\n2-Kütüphaneye Girin\n3-Çıkış\n: ");
-            int choice = input.nextInt();
+            int choice = inputManager.getInt(1, 3);
 
             switch (choice) {
-                case 1: {
+                case 1: { // Bookshelf Menu
                     bookshelfMenu.showBookshelfMenu(loggedInUser);
                     break;
                 }
-                case 2: {
+                case 2: { // Library Menu
                     libraryMenu.showLibraryMenu(loggedInUser);
                     break;
                 }
