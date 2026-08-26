@@ -17,7 +17,7 @@ public class Loan {
         this.returned = false;
     }
 
-    public void borrow() {
+    public void borrow() { // Create borrow date
 
         if (borrowDate != null) {
             return;
@@ -27,7 +27,7 @@ public class Loan {
         returned = false;
     }
 
-    public void returnBook() {
+    public void returnBook() { // Create return date
 
         if (returned) {
             return;
