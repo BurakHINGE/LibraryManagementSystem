@@ -1,162 +1,142 @@
-import java.util.Scanner;
-
 public class MenuManager {
-    
-    private Scanner input;
+
     private AuthenticationManager auth;
     private UserMenu userMenu;
+    private InputManager inputManager;
 
     public MenuManager(AuthenticationManager auth, UserMenu userMenu) {
-        this.input = new Scanner(System.in);
         this.auth = auth;
         this.userMenu = userMenu;
+        this.inputManager = new InputManager();
     }
 
-    public void showMainMenu() {
+    public void showMainMenu() { // Main Menu
 
         while (true) {
-            System.out.println("Kütüphaneye Hoş Geldiniz!");
+            System.out.println("Uygulamaya Hoş Geldiniz!");
             System.out.println("1-Giriş Yap\n2-Kayıt Ol\n3-Çıkış Yap");
-            int secenek = input.nextInt();
-            input.nextLine();
 
-            while (secenek < 1 || secenek > 3) {
-                System.out.println("Lütfen geçerli bir işlem giriniz!");
-                System.out.println("1-Giriş Yap\n2-Kayıt Ol\n3-Çıkış Yap");
-                secenek = input.nextInt();
-                input.nextLine();
-            }
+            int choice = inputManager.getInt(1, 3);
 
-            if (secenek == 3) { //exit program
+            if (choice == 3) {
                 break;
             }
-            else if (secenek == 2) { //register
+            else if (choice == 2) {
                 registerMenu();
             }
-            else if(secenek == 1) { //login
+            else if (choice == 1) {
                 loginMenu();
             }
         }
+
         auth.logout();
     }
 
-    private void registerMenu() {
+    private void registerMenu() { // Register Menu
 
-        System.out.println("-----Kayıt Ol-----");
-        System.out.println("Kullanıcı Adı Seçiniz: ");
-        String kullaniciAdi = input.nextLine();
+        System.out.println("----- Kayıt Ol -----");
+        System.out.println("Kullanıcı Adı Seçiniz:");
+        String username = inputManager.getString();
 
-        boolean isCorrectUsername = auth.isAllowedUsername(kullaniciAdi);
-
-        while (!isCorrectUsername) {
-            System.out.println("Bu isimde başka bir kullanıcı adı bulunuyor lütfen farklı bir kullanıcı adı seçiniz.");
-            System.out.println("-----Kayıt Ol-----");
-            System.out.println("Kullanıcı Adı Seçiniz: ");
-            kullaniciAdi = input.nextLine();
-
-            isCorrectUsername = auth.isAllowedUsername(kullaniciAdi);
-       }
-                
-        System.out.println("Şifre Belirleyiniz: ");
-        String sifre = input.nextLine();
-
-        int isCorrectPassword = auth.isAllowedPassword(sifre);
-
-        while (!(isCorrectPassword == 8)) {
-
-            switch (isCorrectPassword) {
-                case 0: {
-                    System.out.println("Şifreniz çok kısa lütfen en az 8 karakterli şifre oluşturun!");
-                    System.out.println("Şifrenizi giriniz: ");
-                    sifre = input.nextLine();
-                    break;
-                }
-                case 1: {
-                    System.out.println("Şifrenizde en az birer adet küçük, büyük ve özel karakter bulunmalıdır!");
-                    System.out.println("Şifrenizi giriniz: ");
-                    sifre = input.nextLine();
-                    break;
-                }
-                case 2: {
-                    System.out.println("Şifrenizde en az birer adet büyük ve küçük harf bulunmalıdır!");
-                    System.out.println("Şifrenizi giriniz: ");
-                    sifre = input.nextLine();
-                    break;
-                }
-                case 3: {
-                    System.out.println("Şifrenizde en az birer adet büyük ve özel karakter bulunmalıdır!");
-                    System.out.println("Şifrenizi giriniz: ");
-                    sifre = input.nextLine();
-                    break;
-                }
-                case 4: {
-                    System.out.println("Şifrenizde en az birer adet küçük ve özel karakter bulunmalıdır!");
-                    System.out.println("Şifrenizi giriniz: ");
-                    sifre = input.nextLine();
-                    break;
-                }
-                case 5: {
-                    System.out.println("Şifrenizde en az bir adet özel karakter bulunmalıdır!");
-                    System.out.println("Şifrenizi giriniz: ");
-                    sifre = input.nextLine();
-                    break;
-                }
-                case 6: {
-                    System.out.println("Şifrenizde en az bir adet küçük harf bulunmalıdır!");
-                    System.out.println("Şifrenizi giriniz: ");
-                    sifre = input.nextLine();
-                    break;
-                }
-                case 7: {
-                    System.out.println("Şifrenizde en az bir adet büyük harf bulunmalıdır!");
-                    System.out.println("Şifrenizi giriniz: ");
-                    sifre = input.nextLine();
-                    break;
-                }
-            }
-
-            isCorrectPassword = auth.isAllowedPassword(sifre);
+        while (!auth.isAllowedUsername(username)) {
+            System.out.println("Bu isimde başka bir kullanıcı adı bulunuyor. Lütfen farklı bir kullanıcı adı seçiniz.");
+            System.out.println("Kullanıcı Adı Seçiniz:");
+            username = inputManager.getString();
         }
 
-        System.out.println("Aynı şifreyi tekrar giriniz: ");
-        String tekrarSifre = input.nextLine();
+        System.out.println("Şifre Belirleyiniz:");
+        String password = inputManager.getString();
 
-        sifre = auth.testSifre(sifre, tekrarSifre, input);
+        int passwordValidation = auth.isAllowedPassword(password);
 
-        boolean isCorrect = auth.register(kullaniciAdi, sifre);
+        while (passwordValidation != AuthenticationManager.ALLOWED) { // Check password requirements
+            switch (passwordValidation) {
+                case AuthenticationManager.SHORT:
+                    System.out.println(
+                        "Şifreniz çok kısa! " +
+                        "Lütfen en az 8 karakterli şifre oluşturun."
+                    );
+                    break;
+                case AuthenticationManager.ALL_REQ_DENIED:
+                    System.out.println(
+                        "Şifrenizde en az birer adet küçük, " +
+                        "büyük ve özel karakter bulunmalıdır!"
+                    );
+                    break;
+                case AuthenticationManager.CAPITAL_LOWER:
+                    System.out.println(
+                        "Şifrenizde en az birer adet büyük ve küçük harf bulunmalıdır!"
+                    );
+                    break;
+                case AuthenticationManager.CAPITAL_SPECIAL:
+                    System.out.println(
+                        "Şifrenizde en az birer adet büyük ve özel karakter bulunmalıdır!"
+                    );
+                    break;
+                case AuthenticationManager.LOWER_SPECIAL:
+                    System.out.println(
+                        "Şifrenizde en az birer adet küçük ve özel karakter bulunmalıdır!"
+                    );
+                    break;
+                case AuthenticationManager.SPECIAL:
+                    System.out.println(
+                        "Şifrenizde en az bir adet özel karakter bulunmalıdır!"
+                    );
+                    break;
+                case AuthenticationManager.LOWER:
+                    System.out.println(
+                        "Şifrenizde en az bir adet küçük harf bulunmalıdır!"
+                    );
+                    break;
+                case AuthenticationManager.CAPITAL:
+                    System.out.println(
+                        "Şifrenizde en az bir adet büyük harf bulunmalıdır!"
+                    );
+                    break;
+            }
 
-        while (!isCorrect) {
-            System.out.println("Bu isimde başka bir kullanıcı adı bulunuyor lütfen farklı bir kullanıcı adı seçiniz.");
+            System.out.println("Şifrenizi giriniz:");
+            password = inputManager.getString();
+            passwordValidation = auth.isAllowedPassword(password);
+        }
 
-            System.out.println("-----Kayıt Ol-----");
-            System.out.println("Kullanıcı Adı Seçiniz: ");
-            kullaniciAdi = input.nextLine();
-                    
-            System.out.println("Şifre Belirleyiniz: ");
-            sifre = input.nextLine();
+        // Password confirmation
+        while (true) {
 
-            System.out.println("Aynı şifreyi tekrar giriniz: ");
-            tekrarSifre = input.nextLine();
+            System.out.println("Aynı şifreyi tekrar giriniz:");
+            String againPassword = inputManager.getString();
 
-            sifre = auth.testSifre(sifre, tekrarSifre, input);
+            if (auth.passwordsMatch(password, againPassword)) {
+                break;
+            }
 
-            isCorrect = auth.register(kullaniciAdi, sifre);
-       }
+            System.out.println("Farklı şifreler girdiniz, lütfen tekrar deneyin.");
+            System.out.println("Şifrenizi tekrar giriniz:");
+            password = inputManager.getString();
+        }
 
-        System.out.println("Hesabınız oluşturuldu!");
-        System.out.println("Artık istediğiniz kitapları ve yazarlarını kitaplığınıza ekleyebilirsiniz.");
-        System.out.println("Tekrardan giriş yapmalısınız:");
+        // Check register
+        boolean isRegistered = auth.register(username, password);
+
+        if (isRegistered) {
+            System.out.println("Hesabınız oluşturuldu!");
+            System.out.println(
+                "Artık istediğiniz kitapları ve yazarlarını " +
+                "kitaplığınıza ekleyebilirsiniz."
+            );
+            System.out.println("Tekrardan giriş yapmalısınız:");
+        }
     }
 
-    private void loginMenu() {
+    private void loginMenu() { // Login Menu
 
-        System.out.println("Giriş yapmak için kullanıcı adınızı giriniz: ");
-        String kullaniciAdi = input.nextLine();
+        System.out.println("Giriş yapmak için kullanıcı adınızı giriniz:");
+        String username = inputManager.getString();
 
-        System.out.println("Şifrenizi giriniz: ");
-        String sifre = input.nextLine();
+        System.out.println("Şifrenizi giriniz:");
+        String password = inputManager.getString();
 
-        User loggedInUser = auth.login(kullaniciAdi, sifre);
+        User loggedInUser = auth.login(username, password);
 
         if (loggedInUser == null) {
             System.out.println("Hatalı kullanıcı adı veya şifre!");
