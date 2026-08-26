@@ -1,16 +1,13 @@
-
-import java.util.Scanner;
-
 public class LibraryMenu {
 
-    private Scanner input;
     private Library library;
     private AuthenticationManager auth;
+    private InputManager inputManager;
     
     public LibraryMenu(Library library, AuthenticationManager auth) {
-        input = new Scanner(System.in);
         this.library = library;
         this.auth = auth;
+        this.inputManager = new InputManager();
     }
 
 
@@ -18,21 +15,14 @@ public class LibraryMenu {
 
         System.out.println("Kütüphaneye Hoş Geldin " + loggedInUser.getUsername());
 
-        while (true) { 
+        while (true) {
             
             System.out.println("----- Kütüphane -----");
             System.out.println("1 - Kitapları Gör\n2 - Kitap Ara\n3 - Kitap Ödünç Al\n4 - Kitap İade Et\n5 - Ödünç Aldıklarım\n6 - Ana Sayfaya Dön");
-            int choice = input.nextInt();
-
-            while (choice < 1 || choice > 6) {
-                System.out.println("Lütfen geçerli bir işlem giriniz: ");
-                System.out.println("1 - Kitapları Gör\n2 - Kitap Ara\n3 - Kitap Ödünç Al\n4 - Kitap İade Et\n5 - Ödünç Aldıklarım\n6 - Ana Sayfaya Dön");
-                choice = input.nextInt();
-                input.nextLine();
-            }
+            int choice = inputManager.getInt(1, 6);
 
             switch (choice) {
-                case 1: {
+                case 1: { // See books in the library
                     for (LibraryBook libraryBook : library.getBooks()) {
 
                         Book book = libraryBook.getBook();
@@ -41,10 +31,9 @@ public class LibraryMenu {
                     }
                     break;
                 }
-                case 2: {
-
+                case 2: { // Search books in the library
                     System.out.println("Aramak istediğiniz kitabın adını giriniz > ");
-                    String bookName = input.nextLine().trim().toLowerCase();
+                    String bookName = inputManager.getString().trim().toLowerCase();
                     boolean found = false;
 
                     for (LibraryBook libraryBook : library.getBooks()) {
@@ -61,14 +50,15 @@ public class LibraryMenu {
                     }
 
                     System.out.println("Geri gelmek için 0 giriniz\n> ");
-                    int exitChoice = input.nextInt();
+                    int exitChoice = inputManager.getInt();
 
-                    if (exitChoice == 0) {
-                        break;
+                    while (exitChoice != 0){
+                        System.out.println("Geri gelmek için sadece 1'i tuşlayabilirsiniz: ");
+                        exitChoice = inputManager.getInt();
                     }
                     break;
                 }
-                case 3: {
+                case 3: { // Borrow book from library
                     System.out.println("----- Kütüphanedeki Kitaplar -----");
 
                     for (LibraryBook libraryBook : library.getBooks()) {
@@ -79,7 +69,7 @@ public class LibraryMenu {
                     }
 
                     System.out.println("Ödünç almak istediğiniz kitabın ID'sini giriniz\nÇıkış Yapmak için 0 Giriniz\n> ");
-                    int idChoice = input.nextInt();
+                    int idChoice = inputManager.getInt();
 
                     if (idChoice == 0) {
                         break;
@@ -94,7 +84,7 @@ public class LibraryMenu {
                         System.out.println("Bu kitabın şu anda müsait kopyası bulunmuyor.");
                     }
                     else {
-                        boolean borrowed = library.borrowBookFromLibrary(idChoice, loggedInUser); //Create readind record for user
+                        boolean borrowed = library.borrowBookFromLibrary(idChoice, loggedInUser); //Create reading record for user
                         
                         if (borrowed) {
                             System.out.println("Kitap başarıyla ödünç alındı.");
@@ -102,8 +92,7 @@ public class LibraryMenu {
                     }
                     break;
                 }
-                case 4: {
-
+                case 4: { // Return book to library
                     System.out.println("----- Ödünç Alınan Kitaplar -----");
 
                     boolean hasActiveLoan = false;
@@ -119,13 +108,13 @@ public class LibraryMenu {
                         }
                     }
 
-                    if (hasActiveLoan) {
+                    if (hasActiveLoan) { // Print if there is no any loan
                         System.out.println("Ödünç alınan kitabınız bulunmuyor.");
                         break;
                     }
 
                     System.out.println("\nİade etmek istediğiniz kitabın Loan ID'sini giriniz\nÇıkış için 0 giriniz\n> ");
-                    int idChoice = input.nextInt();
+                    int idChoice = inputManager.getInt();
 
                     if (idChoice == 0) {
                         break;
@@ -141,8 +130,7 @@ public class LibraryMenu {
                     }
                     break;
                 }
-                case 5: {
-
+                case 5: { // Show loaned book list
                     System.out.println("----- Ödünç Alınan Kitaplarınız -----");
 
                     for (Loan loan : loggedInUser.getLoans()) {
@@ -155,10 +143,11 @@ public class LibraryMenu {
                     }
 
                     System.out.println("Geri gelmek için 0 giriniz\n> ");
-                    int exitChoice = input.nextInt();
+                    int exitChoice = inputManager.getInt();
 
-                    if (exitChoice == 0) {
-                        break;
+                    while (exitChoice != 0) {
+                        System.out.println("Geri gelmek için sadece 1'i tuşlayabilirsiniz: ");
+                        exitChoice = inputManager.getInt();
                     }
                     break;
                 }
