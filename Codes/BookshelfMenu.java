@@ -1,14 +1,11 @@
-
-import java.util.Scanner;
-
 public class BookshelfMenu {
 
-    private Scanner input;
     private AuthenticationManager auth;
+    private InputManager inputManager;
 
     public BookshelfMenu(AuthenticationManager auth) {
-        this.input = new Scanner(System.in);
         this.auth = auth;
+        inputManager = new InputManager();
     }
 
     public void showBookshelfMenu(User loggedInUser) {
@@ -18,22 +15,14 @@ public class BookshelfMenu {
         while (true) {
             System.out.println("----- Kitaplık -----");
             System.out.println("1 - Kitap Ekle\n2 - Kitaplığını Gör\n3 - Ana Sayfaya Dön");
-            int choice = input.nextInt();
-            input.nextLine();
-
-            while (choice < 1 || choice > 3) {
-                System.out.println("Lütfen geçerli bir işlem giriniz: ");
-                System.out.println("1 - Kitap Ekle\n2 - Kitaplığını Gör\n3 - Ana Sayfaya Dön");
-                choice = input.nextInt();
-                input.nextLine();
-            }
+            int choice = inputManager.getInt(1, 3);
 
             switch (choice) {
-                case 3: { //exit bookshelf
+                case 3: { // Exit bookshelf
                     System.out.println("Kitaplıktan çıkış yapılıyor...");
                     break;
                 }
-                case 2: { //list books
+                case 2: { // List books
                     boolean empty = loggedInUser.getBooks().isEmpty();
 
                     if (empty) {
@@ -45,39 +34,37 @@ public class BookshelfMenu {
                         System.out.println("\n");
 
                         System.out.println("Geri gelmek için \"1\": ");
-                        int exitList = input.nextInt();
+                        int exitList = inputManager.getInt();
 
                         while (exitList != 1) {
                             System.out.println("Geri gelmek için sadece 1'i tuşlayabilirsiniz: ");
-                            exitList = input.nextInt();
+                            exitList = inputManager.getInt();
                         }
                     }
                     break;
                 }
-                case 1: { //add book
+                case 1: { // Add book
                     boolean added = false;
 
                     while(!added) {
                         System.out.println("Eklemek istediğiniz kitabın adını giriniz: ");
-                        String bookName = input.nextLine();
+                        String bookName = inputManager.getString();
 
                         System.out.println("Kitabınızın yazarının adını giriniz: ");
-                        String authorName = input.nextLine();
+                        String authorName = inputManager.getString();
 
-                        String category = categoryMenu();
+                        String category = categoryMenu(); // Select category from category menu
 
-                        Book book = new Book(bookName, authorName, category);
-                        ReadingRecord record = new ReadingRecord(book, BookSource.PERSONAL);
+                        Book book = new Book(bookName, authorName, category); // Create new book object for bookshelf
+                        ReadingRecord record = new ReadingRecord(book, BookSource.PERSONAL); // Create reading record for new book to user
 
-                        ReadingStatus status = readInfoMenu();
+                        ReadingStatus status = readInfoMenu(); // Select reading statu from read info menu
                         record.setStatus(status);
 
                         System.out.println("Kitabınızı 10 üzerinden puanlayınız: ");
-                        int puan = input.nextInt();
-                        input.nextLine();
+                        int puan = inputManager.getInt(0, 10);
 
                         record.setRating(puan);
-
                         added = loggedInUser.addBooks(record);
 
                         if (!added) {
@@ -98,11 +85,11 @@ public class BookshelfMenu {
         }
     }
 
-    private String categoryMenu() {
+    private String categoryMenu() { // Category Menu
 
         System.out.println("1- Dünya Klasikleri\n2- Tarih\n3- Psikoloji\n4- Aşk\n5- Korku-Gelirim\n6- Bilim-Kurgu\n7- Polisiye\n8- Aksiyon-Macera\n9- Şiir\n10- Çocuk\n11- Felsefe\n12- Sosyoloji\n13- Biyografi\n14- Makale\n15- Deneme\n16- Bilim-Teknoloji");
         System.out.println("Kitabınızın kategorisini giriniz: ");
-        int choose = input.nextInt();
+        int choose = inputManager.getInt(1, 16);
 
         switch (choose) {
             case 1: {
@@ -157,12 +144,10 @@ public class BookshelfMenu {
         return "";
     }
 
-    private ReadingStatus readInfoMenu() {
+    private ReadingStatus readInfoMenu() { // Reading Info Menu
 
         System.out.println("1- Okudum\n2- Okuyorum\n3- Okuyacağım\nKitabı okuma durumunuzu belirtiniz: ");
-    
-        int choose = input.nextInt();
-        input.nextLine();
+        int choose = inputManager.getInt(1, 3);
     
         switch (choose) {
             case 1:
