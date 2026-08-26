@@ -1,9 +1,7 @@
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class AuthenticationManager {
 
-    private Scanner input;
     public static final int SHORT = 0;
     public static final int ALL_REQ_DENIED = 1;
     public static final int CAPITAL_LOWER = 2;
@@ -16,7 +14,6 @@ public class AuthenticationManager {
     private ArrayList<User> users;
     
     public AuthenticationManager() {
-        this.input = new Scanner(System.in);
         users = JsonManager.loadUsers();
     }
 
@@ -110,16 +107,8 @@ public class AuthenticationManager {
         } 
     }
 
-    public String testSifre(String pass, String testPass, Scanner input) {
-
-        while (!pass.equals(testPass)) {
-            System.out.println("Farklı şifreler girdiniz, lütfen tekrar deneyin.");
-            System.out.println("Şifrenizi giriniz: ");
-            pass = input.nextLine();
-            System.out.println("Aynı şifreyi tekrar giriniz: ");
-            testPass = input.nextLine();
-        }
-        return pass;
+    public boolean passwordsMatch(String password, String againPassword) {
+        return password.equals(againPassword);
     }
 
     public ArrayList<User> getUsers() {
