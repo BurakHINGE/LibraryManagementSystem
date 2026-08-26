@@ -10,7 +10,7 @@ public class Library {
         nextLoanID = 1;
     }
 
-    public boolean addBook(LibraryBook book) {
+    public boolean addBook(LibraryBook book) { // Add book to library
 
         for (LibraryBook tempBook : books) {
             if (tempBook.getBook().getID() == book.getBook().getID()) {
@@ -22,7 +22,7 @@ public class Library {
         return true;
     }
 
-    public boolean removeBook(LibraryBook book) {
+    public boolean removeBook(LibraryBook book) { // Remove book from library
 
         for (LibraryBook tempBook : books) {
             if (tempBook.getBook().getID() == book.getBook().getID()) {
@@ -34,7 +34,7 @@ public class Library {
         return false;
     }
 
-    public LibraryBook findBook(int id) {
+    public LibraryBook findBook(int id) { // Find book in library
 
         for (LibraryBook tempBook : books) {
             if (tempBook.getBook().getID() == id) {
@@ -45,7 +45,7 @@ public class Library {
         return null;
     }
 
-    public boolean borrowBookFromLibrary(int bookID, User user) {
+    public boolean borrowBookFromLibrary(int bookID, User user) { // Borrow book from library
 
         LibraryBook libraryBook = findBook(bookID);
 
@@ -72,7 +72,7 @@ public class Library {
         return true;
     }
 
-    public boolean returnBookToLibrary(int loanID, User user) {
+    public boolean returnBookToLibrary(int loanID, User user) { // Return book to library
 
         Loan targetLoan = null;
     
@@ -100,5 +100,4 @@ public class Library {
     public ArrayList<LibraryBook> getBooks() {
         return books;
     }
-
 }
