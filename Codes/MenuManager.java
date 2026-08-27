@@ -14,9 +14,9 @@ public class MenuManager {
 
         while (true) {
             System.out.println("Uygulamaya Hoş Geldiniz!");
-            System.out.println("1-Giriş Yap\n2-Kayıt Ol\n3-Çıkış Yap");
-
+            System.out.print("1 - Giriş Yap\n2 - Kayıt Ol\n3 - Çıkış Yap\n> ");
             int choice = inputManager.getInt(1, 3);
+            System.out.println();
 
             if (choice == 3) {
                 break;
@@ -35,17 +35,20 @@ public class MenuManager {
     private void registerMenu() { // Register Menu
 
         System.out.println("----- Kayıt Ol -----");
-        System.out.println("Kullanıcı Adı Seçiniz:");
+        System.out.print("Kullanıcı Adı Seçiniz\n> ");
         String username = inputManager.getString();
+        System.out.println();
 
         while (!auth.isAllowedUsername(username)) {
             System.out.println("Bu isimde başka bir kullanıcı adı bulunuyor. Lütfen farklı bir kullanıcı adı seçiniz.");
-            System.out.println("Kullanıcı Adı Seçiniz:");
+            System.out.print("Kullanıcı Adı Seçiniz\n> ");
             username = inputManager.getString();
+            System.out.println();
         }
 
-        System.out.println("Şifre Belirleyiniz:");
+        System.out.print("Şifre Belirleyiniz\n> ");
         String password = inputManager.getString();
+        System.out.println();
 
         int passwordValidation = auth.isAllowedPassword(password);
 
@@ -95,24 +98,27 @@ public class MenuManager {
                     break;
             }
 
-            System.out.println("Şifrenizi giriniz:");
+            System.out.print("Şifrenizi giriniz:");
             password = inputManager.getString();
             passwordValidation = auth.isAllowedPassword(password);
+            System.out.println();
         }
 
         // Password confirmation
         while (true) {
 
-            System.out.println("Aynı şifreyi tekrar giriniz:");
+            System.out.print("Aynı şifreyi tekrar giriniz\n> ");
             String againPassword = inputManager.getString();
+            System.out.println();
 
             if (auth.passwordsMatch(password, againPassword)) {
                 break;
             }
 
             System.out.println("Farklı şifreler girdiniz, lütfen tekrar deneyin.");
-            System.out.println("Şifrenizi tekrar giriniz:");
+            System.out.print("Şifrenizi tekrar giriniz\n> ");
             password = inputManager.getString();
+            System.out.println();
         }
 
         // Check register
@@ -120,21 +126,20 @@ public class MenuManager {
 
         if (isRegistered) {
             System.out.println("Hesabınız oluşturuldu!");
-            System.out.println(
-                "Artık istediğiniz kitapları ve yazarlarını " +
-                "kitaplığınıza ekleyebilirsiniz."
-            );
-            System.out.println("Tekrardan giriş yapmalısınız:");
+            System.out.println("Artık istediğiniz kitapları ve yazarlarını kitaplığınıza ekleyebilirsiniz.");
+            System.out.println("Tekrardan giriş yapmalısınız!");
         }
     }
 
     private void loginMenu() { // Login Menu
 
-        System.out.println("Giriş yapmak için kullanıcı adınızı giriniz:");
+        System.out.print("Giriş yapmak için kullanıcı adınızı giriniz\n> ");
         String username = inputManager.getString();
+        System.out.println();
 
-        System.out.println("Şifrenizi giriniz:");
+        System.out.print("Şifrenizi giriniz\n> ");
         String password = inputManager.getString();
+        System.out.println();
 
         User loggedInUser = auth.login(username, password);
 

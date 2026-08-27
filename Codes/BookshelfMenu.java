@@ -14,8 +14,9 @@ public class BookshelfMenu {
 
         while (true) {
             System.out.println("----- Kitaplık -----");
-            System.out.println("1 - Kitap Ekle\n2 - Kitaplığını Gör\n3 - Ana Sayfaya Dön");
+            System.out.print("1 - Kitap Ekle\n2 - Kitaplığını Gör\n3 - Ana Sayfaya Dön\n> ");
             int choice = inputManager.getInt(1, 3);
+            System.out.println();
 
             switch (choice) {
                 case 3: { // Exit bookshelf
@@ -29,16 +30,18 @@ public class BookshelfMenu {
                         System.out.println("Kitaplığınıza henüz kitap eklemediniz.");
                     }
                     else {
-                        System.out.println("-----Okuma Listeniz-----");
+                        System.out.println("----- Okuma Listeniz -----");
                         loggedInUser.listBooks();
                         System.out.println("\n");
 
-                        System.out.println("Geri gelmek için \"1\": ");
+                        System.out.print("Geri gelmek için \"1\"> ");
                         int exitList = inputManager.getInt();
+                        System.out.println();
 
                         while (exitList != 1) {
-                            System.out.println("Geri gelmek için sadece 1'i tuşlayabilirsiniz: ");
+                            System.out.print("Geri gelmek için sadece 1'i tuşlayabilirsiniz\n> ");
                             exitList = inputManager.getInt();
+                            System.out.println();
                         }
                     }
                     break;
@@ -47,11 +50,13 @@ public class BookshelfMenu {
                     boolean added = false;
 
                     while(!added) {
-                        System.out.println("Eklemek istediğiniz kitabın adını giriniz: ");
+                        System.out.print("Eklemek istediğiniz kitabın adını giriniz\n> ");
                         String bookName = inputManager.getString();
+                        System.out.println();
 
-                        System.out.println("Kitabınızın yazarının adını giriniz: ");
+                        System.out.print("Kitabınızın yazarının adını giriniz\n> ");
                         String authorName = inputManager.getString();
+                        System.out.println();
 
                         String category = categoryMenu(); // Select category from category menu
 
@@ -61,8 +66,9 @@ public class BookshelfMenu {
                         ReadingStatus status = readInfoMenu(); // Select reading statu from read info menu
                         record.setStatus(status);
 
-                        System.out.println("Kitabınızı 10 üzerinden puanlayınız: ");
+                        System.out.print("Kitabınızı 10 üzerinden puanlayınız\n> ");
                         int puan = inputManager.getInt(0, 10);
+                        System.out.println();
 
                         record.setRating(puan);
                         added = loggedInUser.addBooks(record);
@@ -88,8 +94,9 @@ public class BookshelfMenu {
     private String categoryMenu() { // Category Menu
 
         System.out.println("1- Dünya Klasikleri\n2- Tarih\n3- Psikoloji\n4- Aşk\n5- Korku-Gerilim\n6- Bilim-Kurgu\n7- Polisiye\n8- Aksiyon-Macera\n9- Şiir\n10- Çocuk\n11- Felsefe\n12- Sosyoloji\n13- Biyografi\n14- Makale\n15- Deneme\n16- Bilim-Teknoloji");
-        System.out.println("Kitabınızın kategorisini giriniz: ");
+        System.out.print("Kitabınızın kategorisini giriniz\n> ");
         int choose = inputManager.getInt(1, 16);
+        System.out.println();
 
         switch (choose) {
             case 1: {
@@ -146,8 +153,9 @@ public class BookshelfMenu {
 
     private ReadingStatus readInfoMenu() { // Reading Info Menu
 
-        System.out.println("1- Okudum\n2- Okuyorum\n3- Okuyacağım\nKitabı okuma durumunuzu belirtiniz: ");
+        System.out.print("1- Okudum\n2- Okuyorum\n3- Okuyacağım\nKitabı okuma durumunuzu belirtiniz\n> ");
         int choose = inputManager.getInt(1, 3);
+        System.out.println();
     
         switch (choose) {
             case 1:

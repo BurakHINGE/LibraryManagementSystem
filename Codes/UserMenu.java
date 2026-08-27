@@ -22,9 +22,10 @@ public class UserMenu {
         System.out.println("Ana Sayfaya Hoş Geldin " + loggedInUser.getUsername());
 
         while (true) {
-            System.out.println("-----İşlem Seçiniz-----");
-            System.out.println("1-Kitaplığınıza Girin\n2-Kütüphaneye Girin\n3-Çıkış\n: ");
+            System.out.println("----- İşlem Seçiniz -----");
+            System.out.print("1 - Kitaplığınıza Girin\n2 - Kütüphaneye Girin\n3 - Çıkış\n> ");
             int choice = inputManager.getInt(1, 3);
+            System.out.println();
 
             switch (choice) {
                 case 1: { // Bookshelf Menu
