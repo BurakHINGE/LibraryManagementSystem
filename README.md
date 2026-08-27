@@ -5,8 +5,8 @@
 ---
 
 ## 📌 Sürüm Bilgisi | Version Info  
- ● Current Version: 2.3.0
- ● Geçerli Sürüm: 2.3.0
+ ● Current Version: 2.4.0
+ ● Geçerli Sürüm: 2.4.0
 
 ---
  
@@ -135,7 +135,8 @@ java -cp ".;lib/json.jar;Codes" MainLibrary
 
 | Version | Date       | Description |
 |--------:|------------|-------------|
-| v2.3.0  | 2026-08-26 | Input manager and comment lines have been created | Girdi yönetimi ve yorum satırları oluşturuldu |
+| v2.4.0  | 2026-08-27 | 80 books and their copies have been added to library / 80 kitap ve kopyaları kütüphaneye eklendi |
+| v2.3.0  | 2026-08-26 | Input manager and comment lines have been created / Girdi yönetimi ve yorum satırları oluşturuldu |
 | v2.2.0  | 2026-08-25 | Library system has been created. / Kütüphane sistemi oluşturuldu |
 | v2.1.0  | 2026-08-22 | Loan class has been created. Borrow and return dates have been logged / Loan class'ı oluşturuldu. Ödünç alma-verme tarihleri loglanmaya başlandı |
 | v2.0.0  | 2026-08-21 | Redesigned the library and bookshelf system. Added ReadingRecord, LibraryBook, reading status, book source tracking and Borrowable interface / Kütüphane ve kitaplık sistemi yeniden tasarlandı. ReadingRecord, LibraryBook, okuma durumu, kitap kaynağı takibi ve Borrowable interface’i eklendi. |
