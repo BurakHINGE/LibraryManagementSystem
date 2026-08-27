@@ -10,11 +10,12 @@ import java.util.ArrayList;
 
 public class JsonManager {
 
-    private static final String FILE_NAME = "users.json";
+    private static final String USER_FILE_NAME = "users.json";
+    private static final String LIBRARY_FILE_NAME = "libraryBooks.json";
 
     public static void saveUsers(ArrayList<User> users) {
 
-        try (FileWriter writer = new FileWriter(FILE_NAME)) {
+        try (FileWriter writer = new FileWriter(USER_FILE_NAME)) {
 
             Gson gson = new GsonBuilder()
                     .setPrettyPrinting()
@@ -31,15 +32,17 @@ public class JsonManager {
 
     public static ArrayList<User> loadUsers() {
 
-        try (FileReader reader = new FileReader(FILE_NAME)) {
+        try (FileReader reader = new FileReader(USER_FILE_NAME)) {
 
             Gson gson = new GsonBuilder()
                     .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
                     .create();
 
-            Type userListType = new TypeToken<ArrayList<User>>(){}.getType();
+            Type userListType =
+                    new TypeToken<ArrayList<User>>() {}.getType();
 
-            ArrayList<User> users = gson.fromJson(reader, userListType);
+            ArrayList<User> users =
+                    gson.fromJson(reader, userListType);
 
             if (users == null) {
                 return new ArrayList<>();
@@ -48,6 +51,52 @@ public class JsonManager {
             return users;
 
         } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
+    public static void saveLibraryBooks(ArrayList<LibraryBook> books) {
+
+        try (FileWriter writer = new FileWriter(LIBRARY_FILE_NAME)) {
+
+            Gson gson = new GsonBuilder()
+                    .setPrettyPrinting()
+                    .create();
+
+            gson.toJson(books, writer);
+
+        } catch (Exception e) {
+            System.out.println("Kütüphane kitapları JSON'a kaydedilirken hata oluştu.");
+            e.printStackTrace();
+        }
+    }
+
+    public static ArrayList<LibraryBook> loadLibraryBooks() {
+
+        try (FileReader reader = new FileReader(LIBRARY_FILE_NAME)) {
+    
+            Gson gson = new GsonBuilder()
+                    .create();
+    
+            Type libraryBookListType =
+                    new TypeToken<ArrayList<LibraryBook>>() {}.getType();
+    
+            ArrayList<LibraryBook> books =
+                    gson.fromJson(reader, libraryBookListType);
+    
+            if (books == null) {
+                return new ArrayList<>();
+            }
+    
+            for (LibraryBook libraryBook : books) {
+                Book.updateNextID(libraryBook.getBook().getID());
+            }
+    
+            return books;
+    
+        } catch (Exception e) {
+            System.out.println("Kütüphane kitapları yüklenirken hata oluştu.");
             e.printStackTrace();
             return new ArrayList<>();
         }
