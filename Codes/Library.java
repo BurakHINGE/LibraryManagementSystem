@@ -6,7 +6,7 @@ public class Library {
     private int nextLoanID;
     
     public Library() {
-        books = new ArrayList<>();
+        books = JsonManager.loadLibraryBooks();
         nextLoanID = 1;
     }
 
@@ -19,6 +19,7 @@ public class Library {
         }
 
         books.add(book);
+        JsonManager.saveLibraryBooks(books);
         return true;
     }
 
@@ -27,6 +28,7 @@ public class Library {
         for (LibraryBook tempBook : books) {
             if (tempBook.getBook().getID() == book.getBook().getID()) {
                 books.remove(book);
+                JsonManager.saveLibraryBooks(books);
                 return true;
             }
         }
@@ -69,6 +71,7 @@ public class Library {
         nextLoanID++;
         createLoan.borrow();
         user.addLoan(createLoan);
+        JsonManager.saveLibraryBooks(books);
         return true;
     }
 
@@ -94,6 +97,7 @@ public class Library {
         }
     
         targetLoan.returnBook();
+        JsonManager.saveLibraryBooks(books);
         return true;
     }
     
