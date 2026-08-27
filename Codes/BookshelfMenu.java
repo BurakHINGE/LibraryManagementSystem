@@ -87,7 +87,7 @@ public class BookshelfMenu {
 
     private String categoryMenu() { // Category Menu
 
-        System.out.println("1- Dünya Klasikleri\n2- Tarih\n3- Psikoloji\n4- Aşk\n5- Korku-Gelirim\n6- Bilim-Kurgu\n7- Polisiye\n8- Aksiyon-Macera\n9- Şiir\n10- Çocuk\n11- Felsefe\n12- Sosyoloji\n13- Biyografi\n14- Makale\n15- Deneme\n16- Bilim-Teknoloji");
+        System.out.println("1- Dünya Klasikleri\n2- Tarih\n3- Psikoloji\n4- Aşk\n5- Korku-Gerilim\n6- Bilim-Kurgu\n7- Polisiye\n8- Aksiyon-Macera\n9- Şiir\n10- Çocuk\n11- Felsefe\n12- Sosyoloji\n13- Biyografi\n14- Makale\n15- Deneme\n16- Bilim-Teknoloji");
         System.out.println("Kitabınızın kategorisini giriniz: ");
         int choose = inputManager.getInt(1, 16);
 
