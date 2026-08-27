@@ -1,6 +1,7 @@
 public class Book {
     
-    private static int nextID;
+    private static int nextID = 1;
+    private int id;
     private String title;
     private String authorName;
     private String category;
@@ -8,14 +9,21 @@ public class Book {
     private int point;
 
     public Book(String title, String authorName, String category) {
-        this.nextID = nextID++;
+        this.id = nextID++;
         this.title = title;
         this.authorName = authorName;
         this.category = category;
     }
 
     public int getID() {
-        return nextID;
+        return id;
+    }
+
+    public static void updateNextID(int currentID) {
+
+        if (currentID >= nextID) {
+            nextID = currentID + 1;
+        }
     }
     
     public String getTitle() {
