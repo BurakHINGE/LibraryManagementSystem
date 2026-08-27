@@ -7,6 +7,7 @@ public class LibraryBook implements Borrowable {
     public LibraryBook(Book book, int totalCopies) {
         this.book = book;
         this.totalCopies = totalCopies;
+        this.availableCopies = totalCopies;
     }
 
     @Override
