@@ -111,6 +111,10 @@ public class AuthenticationManager {
         return password.equals(againPassword);
     }
 
+    public void saveUsers() {
+        JsonManager.saveUsers(users);
+    }
+
     public ArrayList<User> getUsers() {
         return users;
     }
