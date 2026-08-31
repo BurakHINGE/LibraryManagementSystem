@@ -2,11 +2,13 @@ public class MenuManager {
 
     private AuthenticationManager auth;
     private UserMenu userMenu;
+    private AdminMenu adminMenu;
     private InputManager inputManager;
 
-    public MenuManager(AuthenticationManager auth, UserMenu userMenu) {
+    public MenuManager(AuthenticationManager auth, UserMenu userMenu, AdminMenu adminMenu) {
         this.auth = auth;
         this.userMenu = userMenu;
+        this.adminMenu = adminMenu;
         this.inputManager = new InputManager();
     }
 
@@ -148,6 +150,14 @@ public class MenuManager {
             return;
         }
 
-        userMenu.showUserMenu(loggedInUser);
+        if (loggedInUser.getRole() == Role.USER) {
+            userMenu.showUserMenu(loggedInUser);
+        }
+        else if (loggedInUser.getRole() == Role.ADMIN) {
+            adminMenu.showAdminMenu(loggedInUser);
+        }
+        else {
+            return;
+        }
     }
 }
