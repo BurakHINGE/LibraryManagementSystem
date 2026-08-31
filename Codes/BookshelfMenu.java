@@ -34,7 +34,7 @@ public class BookshelfMenu {
                         loggedInUser.listBooks();
                         System.out.println("\n");
 
-                        System.out.print("Geri gelmek için \"1\"> ");
+                        System.out.print("Geri gelmek için \"1\" > ");
                         int exitList = inputManager.getInt();
                         System.out.println();
 
