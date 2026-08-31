@@ -4,12 +4,14 @@ public class User {
 
     private String username;
     private String password;
+    private Role role;
     private ArrayList<ReadingRecord> bookshelf;
     private ArrayList<Loan> loans;
 
     public User(String username, String password) {
         this.username = username;
         this.password = password;
+        this.role = Role.USER;
         this.bookshelf = new ArrayList<>();
         this.loans = new ArrayList<>();
     }
@@ -55,6 +57,10 @@ public class User {
 
     public String getPassword() {
         return password;
+    }
+
+    public Role getRole() {
+        return role;
     }
 
     public ArrayList<ReadingRecord> getBooks() {
