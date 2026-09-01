@@ -7,7 +7,7 @@ public class MainLibrary {
         Library library = new Library();
         AuthenticationManager auth = new AuthenticationManager();
         UserMenu userMenu = new UserMenu(library, auth);
-        AdminMenu adminMenu = new AdminMenu(library);
+        AdminMenu adminMenu = new AdminMenu(library, auth);
         MenuManager mainMenu = new MenuManager(auth, userMenu, adminMenu);
 
         mainMenu.showMainMenu();

@@ -23,6 +23,36 @@ public class Library {
         return true;
     }
 
+    public boolean removeCopies(int bookID, int amount) {
+
+        LibraryBook libraryBook = findBook(bookID);
+    
+        if (libraryBook == null) {
+            return false;
+        }
+    
+        if (amount <= 0) {
+            return false;
+        }
+    
+        if (amount > libraryBook.getAvailableCopies()) {
+            return false;
+        }
+    
+        int newTotalCopies = libraryBook.getTotalCopies() - amount;
+        int newAvailableCopies = libraryBook.getAvailableCopies() - amount;
+    
+        libraryBook.setTotalCopies(newTotalCopies);
+        libraryBook.setAvailableCopies(newAvailableCopies);
+    
+        if (newTotalCopies == 0) {
+            books.remove(libraryBook);
+        }
+    
+        JsonManager.saveLibraryBooks(books);
+        return true;
+    }
+
     public boolean removeBook(LibraryBook book) { // Remove book from library
 
         for (LibraryBook tempBook : books) {
@@ -34,6 +64,36 @@ public class Library {
         }
 
         return false;
+    }
+
+    public boolean updateBook(int bookID, String title, String authorName, String category, int totalCopies) {
+
+        LibraryBook libraryBook = findBook(bookID);
+    
+        if (libraryBook == null) {
+            return false;
+        }
+
+        int borrowedCopies = libraryBook.getTotalCopies() - libraryBook.getAvailableCopies();
+
+        if (totalCopies < borrowedCopies) {
+            return false;
+        }
+    
+        int availableCopies = totalCopies - borrowedCopies;
+    
+        Book book = libraryBook.getBook();
+    
+        book.setTitle(title);
+        book.setAuthorName(authorName);
+        book.setCategory(category);
+    
+        libraryBook.setTotalCopies(totalCopies);
+        libraryBook.setAvailableCopies(availableCopies);
+    
+        JsonManager.saveLibraryBooks(books);
+    
+        return true;
     }
 
     public LibraryBook findBook(int id) { // Find book in library
