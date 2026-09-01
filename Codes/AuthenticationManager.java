@@ -115,6 +115,28 @@ public class AuthenticationManager {
         JsonManager.saveUsers(users);
     }
 
+    public boolean removeUser(String username) {
+
+        for (User user : users) {
+    
+            if (user.getUsername().equals(username)) {
+    
+                // Aktif ödünç kitabı varsa silme
+                for (Loan loan : user.getLoans()) {
+                    if (!loan.isReturned()) {
+                        return false;
+                    }
+                }
+    
+                users.remove(user);
+                JsonManager.saveUsers(users);
+                return true;
+            }
+        }
+    
+        return false;
+    }
+
     public ArrayList<User> getUsers() {
         return users;
     }
