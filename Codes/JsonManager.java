@@ -48,6 +48,16 @@ public class JsonManager {
                 return new ArrayList<>();
             }
 
+            // Book ID senkronizasyonunu düzeltmek için:
+            for (User user : users) {
+                for (ReadingRecord record : user.getBooks()) {
+                    Book.updateNextID(record.getBook().getID());
+                }
+                for (Loan loan : user.getLoans()) {
+                    Book.updateNextID(loan.getLibraryBook().getBook().getID());
+                }
+            }
+
             return users;
 
         } catch (Exception e) {
