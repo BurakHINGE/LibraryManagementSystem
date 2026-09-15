@@ -1,0 +1,24 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "MainLibrary",
+            "request": "launch",
+            "mainClass": "MainLibrary",
+            "projectName": "LibraryOOP_8cd58273"
+        },
+        {
+            "type": "java",
+            "name": "LibraryOOP Calistir",
+            "request": "launch",
+            "mainClass": "Launcher"
+        },
+        {
+            "type": "java",
+            "name": "Current File",
+            "request": "launch",
+            "mainClass": "${file}"
+        }
+    ]
+}
