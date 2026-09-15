@@ -107,6 +107,17 @@ public class AuthenticationManager {
         } 
     }
 
+    public boolean usernameExists(String username) {
+
+        for (User user : users) {
+            if (user.getUsername().equals(username)) {
+                return true;
+            }
+        }
+    
+        return false;
+    }
+
     public boolean passwordsMatch(String password, String againPassword) {
         return password.equals(againPassword);
     }
