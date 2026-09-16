@@ -1,0 +1,9 @@
+[
+  {
+    "username": "Admin",
+    "password": "Admin123!",
+    "role": "ADMIN",
+    "bookshelf": [],
+    "loans": []
+  }
+]
