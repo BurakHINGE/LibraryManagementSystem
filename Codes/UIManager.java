@@ -109,6 +109,18 @@ public class UIManager {
         Label errorLabel = new Label();
         errorLabel.styleProperty().bind(Bindings.concat("-fx-font-size: ", rootPane.heightProperty().multiply(0.02).asString(), "px; -fx-text-fill: red;"));
 
+        usernameField.textProperty().addListener((obs, oldValue, newValue) -> {
+            if (newValue.contains(" ")) {
+                usernameField.setText(newValue.replace(" ", ""));
+            }
+        });
+
+        passwordField.textProperty().addListener((obs, oldValue, newValue) -> {
+            if (newValue.contains(" ")) {
+                passwordField.setText(newValue.replace(" ", ""));
+            }
+        });
+
         applyScaling(usernameField, 0.25, 0.06, 0.02);
         applyScaling(passwordField, 0.25, 0.06, 0.02);
         applyScaling(loginButton, 0.25, 0.06, 0.02);
@@ -185,6 +197,24 @@ public class UIManager {
 
         Label errorLabel = new Label();
         errorLabel.styleProperty().bind(Bindings.concat("-fx-font-size: ", rootPane.heightProperty().multiply(0.015).asString(), "px; -fx-text-fill: red;"));
+
+        usernameField.textProperty().addListener((obs, oldValue, newValue) -> {
+            if (newValue.contains(" ")) {
+                usernameField.setText(newValue.replace(" ", ""));
+            }
+        });
+
+        passwordField.textProperty().addListener((obs, oldValue, newValue) -> {
+            if (newValue.contains(" ")) {
+                passwordField.setText(newValue.replace(" ", ""));
+            }
+        });
+
+        ctrlPasswordField.textProperty().addListener((obs, oldValue, newValue) -> {
+            if (newValue.contains(" ")) {
+                ctrlPasswordField.setText(newValue.replace(" ", ""));
+            }
+        });
 
         applyScaling(usernameField, 0.25, 0.06, 0.02);
         applyScaling(passwordField, 0.25, 0.06, 0.02);
@@ -438,6 +468,12 @@ public class UIManager {
             TextField idField = new TextField();
             idField.setPromptText("Enter Book ID...");
             applyScaling(idField, 0.4, 0.05, 0.02);
+
+            idField.textProperty().addListener((obs, oldValue, newValue) -> {
+                if (newValue.contains(" ")) {
+                    idField.setText(newValue.replace(" ", ""));
+                }
+            });
             
             Button borrowBtn = new Button("Borrow");
             applyScaling(borrowBtn, 0.15, 0.05, 0.02);
@@ -528,6 +564,12 @@ public class UIManager {
             TextField idField = new TextField();
             idField.setPromptText("Enter Loan ID...");
             applyScaling(idField, 0.4, 0.05, 0.02);
+
+            idField.textProperty().addListener((obs, oldValue, newValue) -> {
+                if (newValue.contains(" ")) {
+                    idField.setText(newValue.replace(" ", ""));
+                }
+            });
             
             Button returnBtn = new Button("Return");
             applyScaling(returnBtn, 0.15, 0.05, 0.02);
@@ -650,6 +692,12 @@ public class UIManager {
             TextField ratingField = new TextField();
             ratingField.setPromptText("Rating (0-10)");
             applyScaling(ratingField, 0.4, 0.05, 0.02);
+
+            ratingField.textProperty().addListener((obs, oldValue, newValue) -> {
+                if (newValue.contains(" ")) {
+                    ratingField.setText(newValue.replace(" ", ""));
+                }
+            });
 
             Button saveBtn = new Button("Save Book");
             applyScaling(saveBtn, 0.2, 0.05, 0.02);
@@ -1017,17 +1065,27 @@ public class UIManager {
 
             TextField titleField = new TextField(); titleField.setPromptText("Book Title");
             applyScaling(titleField, 0.4, 0.05, 0.02);
+
             TextField authorField = new TextField(); authorField.setPromptText("Author Name");
             applyScaling(authorField, 0.4, 0.05, 0.02);
+
             ComboBox<String> categoryBox = new ComboBox<>();
             categoryBox.getItems().addAll("Dünya Klasikleri", "Tarih", "Psikoloji", "Aşk", "Korku-Gerilim", "Bilim-Kurgu", "Polisiye", "Aksiyon-Macera", "Şiir", "Çocuk", "Felsefe", "Sosyoloji", "Biyografi", "Makale", "Deneme", "Bilim-Teknoloji");
             categoryBox.setPromptText("Category");
             applyScaling(categoryBox, 0.4, 0.05, 0.02);
+
             TextField copiesField = new TextField(); copiesField.setPromptText("Total Copies");
             applyScaling(copiesField, 0.4, 0.05, 0.02);
+
+            copiesField.textProperty().addListener((obs, oldValue, newValue) -> {
+                if (newValue.contains(" ")) {
+                    copiesField.setText(newValue.replace(" ", ""));
+                }
+            });
             
             Button saveBtn = new Button("Save Book");
             applyScaling(saveBtn, 0.2, 0.05, 0.02);
+
             Label msgLabel = new Label();
             msgLabel.styleProperty().bind(Bindings.concat("-fx-font-size: ", rootPane.heightProperty().multiply(0.02).asString(), "px;"));
 
@@ -1090,10 +1148,25 @@ public class UIManager {
 
             HBox actionBox = new HBox(10);
             actionBox.setAlignment(Pos.CENTER);
+
             TextField idField = new TextField(); idField.setPromptText("Book ID");
             applyScaling(idField, 0.2, 0.05, 0.02);
+
+            idField.textProperty().addListener((obs, oldValue, newValue) -> {
+                if (newValue.contains(" ")) {
+                    idField.setText(newValue.replace(" ", ""));
+                }
+            });
+
             TextField amountField = new TextField(); amountField.setPromptText("Amount");
             applyScaling(amountField, 0.2, 0.05, 0.02);
+
+            amountField.textProperty().addListener((obs, oldValue, newValue) -> {
+                if (newValue.contains(" ")) {
+                    amountField.setText(newValue.replace(" ", ""));
+                }
+            });
+
             Button delBtn = new Button("Delete");
             applyScaling(delBtn, 0.15, 0.05, 0.02);
             actionBox.getChildren().addAll(idField, amountField, delBtn);
@@ -1168,6 +1241,13 @@ public class UIManager {
             idBox.setAlignment(Pos.CENTER);
             TextField idField = new TextField(); idField.setPromptText("Book ID to Edit");
             applyScaling(idField, 0.3, 0.05, 0.02);
+
+            idField.textProperty().addListener((obs, oldValue, newValue) -> {
+                if (newValue.contains(" ")) {
+                    idField.setText(newValue.replace(" ", ""));
+                }
+            });
+
             Button loadBtn = new Button("Load Book");
             applyScaling(loadBtn, 0.15, 0.05, 0.02);
             idBox.getChildren().addAll(idField, loadBtn);
