@@ -40,13 +40,6 @@ public class User {
         return false;
     }
 
-    public void listBooks() { // List books in the bookshelf
-
-        for (ReadingRecord book : bookshelf) {
-            System.out.println(book.getBook().getTitle() + " - " + book.getBook().getAuthorName() + " - " + book.getBook().getCategory() + " - " + book.getStatus() + " - " + book.getRating());
-        }
-    }
-
     public void addLoan(Loan loan) { // Add loan book from library
         loans.add(loan);
     }

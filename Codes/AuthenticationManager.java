@@ -44,7 +44,7 @@ public class AuthenticationManager {
     }
 
     public int logout() {
-        System.out.println("Kütüphaneden çıkış yapılıyor...");
+        
         return 0;
     }
 
