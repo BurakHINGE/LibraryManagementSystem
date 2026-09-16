@@ -813,14 +813,21 @@ public class UIManager {
         manageSubMenu.setVisible(false);
         manageSubMenu.setManaged(false);
 
-        Button btnManageBooks = createSidebarSubButton("Manage Books", sidebar);
-        Button btnManageUsers = createSidebarSubButton("Manage Users", sidebar);
+        Button btnViewBooks = createSidebarSubButton("See Books", sidebar);
+        Button btnSearchBook = createSidebarSubButton("Search Book", sidebar);
+        Button btnAddBook = createSidebarSubButton("Add Book", sidebar);
+        Button btnDeleteBook = createSidebarSubButton("Delete Book", sidebar);
+        Button btnEditBook = createSidebarSubButton("Edit Book", sidebar);
+        Button btnViewUsers = createSidebarSubButton("View Users", sidebar);
+        Button btnDeleteUser = createSidebarSubButton("Delete User", sidebar);
         Button btnViewLoans = createSidebarSubButton("View Loans", sidebar);
 
-        manageSubMenu.getChildren().addAll(btnManageBooks, btnManageUsers, btnViewLoans);
+        manageSubMenu.getChildren().addAll(
+            btnViewBooks, btnSearchBook, btnAddBook, btnDeleteBook, btnEditBook, 
+            btnViewUsers, btnDeleteUser, btnViewLoans
+        );
 
         manageMainButton.setOnAction(e -> {
-
             boolean isVisible = manageSubMenu.isVisible();
             manageSubMenu.setVisible(!isVisible);
             manageSubMenu.setManaged(!isVisible);
@@ -828,7 +835,6 @@ public class UIManager {
         });
 
         manageContainer.getChildren().addAll(manageMainButton, manageSubMenu);
-
         sidebar.getChildren().addAll(menuTitle, manageContainer);
         borderPane.setLeft(sidebar);
 
@@ -838,9 +844,474 @@ public class UIManager {
         
         Label welcomeLabel = new Label("Welcome, " + currentUser.getUsername());
         welcomeLabel.styleProperty().bind(Bindings.concat("-fx-font-size: ", rootPane.heightProperty().multiply(0.04).asString(), "px;"));
-
         contentArea.getChildren().add(welcomeLabel);
         borderPane.setCenter(contentArea);
+
+        // --- btnViewBooks ---
+        btnViewBooks.setOnAction(e -> {
+            contentArea.getChildren().clear();
+            Label header = new Label("Library Books");
+            header.styleProperty().bind(Bindings.concat("-fx-font-size: ", rootPane.heightProperty().multiply(0.04).asString(), "px; -fx-font-weight: bold;"));
+            ScrollPane scroll = new ScrollPane();
+            scroll.setFitToWidth(true);
+            applyScaling(scroll, 0.6, 0.6, 0); 
+            VBox listVBox = new VBox(10);
+            listVBox.setAlignment(Pos.TOP_CENTER);
+            listVBox.setPadding(new Insets(10));
+            if (library.getBooks().isEmpty()) {
+                Label emptyLbl = new Label("Kütüphanede kitap bulunmuyor.");
+                emptyLbl.styleProperty().bind(Bindings.concat("-fx-font-size: ", rootPane.heightProperty().multiply(0.02).asString(), "px;"));
+                listVBox.getChildren().add(emptyLbl);
+            } else {
+                for (LibraryBook libraryBook : library.getBooks()) {
+                    Book b = libraryBook.getBook();
+                    String info = b.getTitle() + " - " + b.getAuthorName() + " - " + b.getCategory() 
+                            + "\nMüsait: " + libraryBook.getAvailableCopies() + "/" + libraryBook.getTotalCopies();
+                    Label bookLbl = new Label(info);
+                    bookLbl.styleProperty().bind(Bindings.concat("-fx-font-size: ", rootPane.heightProperty().multiply(0.02).asString(), "px; -fx-background-color: #f8f9fa; -fx-border-color: #cccccc; -fx-padding: 10;"));
+                    bookLbl.prefWidthProperty().bind(scroll.widthProperty().subtract(40));
+                    listVBox.getChildren().add(bookLbl);
+                }
+            }
+            scroll.setContent(listVBox);
+            contentArea.getChildren().addAll(header, scroll);
+        });
+
+        // --- btnSearchBook ---
+        btnSearchBook.setOnAction(e -> {
+            contentArea.getChildren().clear();
+            Label header = new Label("Search Book");
+            header.styleProperty().bind(Bindings.concat("-fx-font-size: ", rootPane.heightProperty().multiply(0.04).asString(), "px; -fx-font-weight: bold;"));
+            HBox searchBox = new HBox(10);
+            searchBox.setAlignment(Pos.CENTER);
+            TextField searchField = new TextField();
+            searchField.setPromptText("Enter book name...");
+            applyScaling(searchField, 0.4, 0.05, 0.02);
+            Button searchBtn = new Button("Search");
+            applyScaling(searchBtn, 0.15, 0.05, 0.02);
+            searchBox.getChildren().addAll(searchField, searchBtn);
+            Label msgLabel = new Label();
+            msgLabel.styleProperty().bind(Bindings.concat("-fx-font-size: ", rootPane.heightProperty().multiply(0.02).asString(), "px;"));
+            ScrollPane scroll = new ScrollPane();
+            scroll.setFitToWidth(true);
+            applyScaling(scroll, 0.6, 0.5, 0); 
+            VBox listVBox = new VBox(10);
+            listVBox.setAlignment(Pos.TOP_CENTER);
+            listVBox.setPadding(new Insets(10));
+            scroll.setContent(listVBox);
+
+            searchBtn.setOnAction(ev -> {
+                listVBox.getChildren().clear();
+                msgLabel.setText("");
+                String query = searchField.getText().trim().toLowerCase();
+                if (query.isEmpty()) return;
+                boolean found = false;
+                for (LibraryBook libraryBook : library.getBooks()) {
+                    if (libraryBook.getBook().getTitle().toLowerCase().contains(query)) {
+                        found = true;
+                        Book b = libraryBook.getBook();
+                        String info = b.getTitle() + " - " + b.getAuthorName() + " - " + b.getCategory() 
+                                + "\nMüsait: " + libraryBook.getAvailableCopies() + "/" + libraryBook.getTotalCopies();
+                        Label bookLbl = new Label(info);
+                        bookLbl.styleProperty().bind(Bindings.concat("-fx-font-size: ", rootPane.heightProperty().multiply(0.02).asString(), "px; -fx-background-color: #f8f9fa; -fx-border-color: #cccccc; -fx-padding: 10;"));
+                        bookLbl.prefWidthProperty().bind(scroll.widthProperty().subtract(40));
+                        listVBox.getChildren().add(bookLbl);
+                    }
+                }
+                if (!found) {
+                    msgLabel.setText("Aradığınız kitap bulunamadı.");
+                    msgLabel.setStyle("-fx-text-fill: red;");
+                }
+            });
+            contentArea.getChildren().addAll(header, searchBox, msgLabel, scroll);
+        });
+
+        // --- btnAddBook ---
+        btnAddBook.setOnAction(e -> {
+            contentArea.getChildren().clear();
+            Label header = new Label("Add Book");
+            header.styleProperty().bind(Bindings.concat("-fx-font-size: ", rootPane.heightProperty().multiply(0.04).asString(), "px; -fx-font-weight: bold;"));
+
+            TextField titleField = new TextField(); titleField.setPromptText("Book Title");
+            applyScaling(titleField, 0.4, 0.05, 0.02);
+            TextField authorField = new TextField(); authorField.setPromptText("Author Name");
+            applyScaling(authorField, 0.4, 0.05, 0.02);
+            ComboBox<String> categoryBox = new ComboBox<>();
+            categoryBox.getItems().addAll("Dünya Klasikleri", "Tarih", "Psikoloji", "Aşk", "Korku-Gerilim", "Bilim-Kurgu", "Polisiye", "Aksiyon-Macera", "Şiir", "Çocuk", "Felsefe", "Sosyoloji", "Biyografi", "Makale", "Deneme", "Bilim-Teknoloji");
+            categoryBox.setPromptText("Category");
+            applyScaling(categoryBox, 0.4, 0.05, 0.02);
+            TextField copiesField = new TextField(); copiesField.setPromptText("Total Copies");
+            applyScaling(copiesField, 0.4, 0.05, 0.02);
+            
+            Button saveBtn = new Button("Save Book");
+            applyScaling(saveBtn, 0.2, 0.05, 0.02);
+            Label msgLabel = new Label();
+            msgLabel.styleProperty().bind(Bindings.concat("-fx-font-size: ", rootPane.heightProperty().multiply(0.02).asString(), "px;"));
+
+            saveBtn.setOnAction(ev -> {
+                try {
+                    String title = titleField.getText().trim();
+                    String author = authorField.getText().trim();
+                    String cat = categoryBox.getValue();
+                    int copies = Integer.parseInt(copiesField.getText().trim());
+                    if (title.isEmpty() || author.isEmpty() || cat == null || copies < 1) {
+                        msgLabel.setText("Lütfen tüm alanları geçerli doldurun.");
+                        msgLabel.setStyle("-fx-text-fill: red;");
+                        return;
+                    }
+                    Book book = new Book(title, author, cat);
+                    LibraryBook libraryBook = new LibraryBook(book, copies);
+                    if (library.addBook(libraryBook)) {
+                        msgLabel.setText("Kitap başarıyla kütüphaneye eklendi.");
+                        msgLabel.setStyle("-fx-text-fill: green;");
+                        titleField.clear(); authorField.clear(); categoryBox.setValue(null); copiesField.clear();
+                    } else {
+                        msgLabel.setText("Kitap kütüphaneye eklenemedi (ID çakışması).");
+                        msgLabel.setStyle("-fx-text-fill: red;");
+                    }
+                } catch (NumberFormatException ex) {
+                    msgLabel.setText("Geçerli bir kopya sayısı giriniz.");
+                    msgLabel.setStyle("-fx-text-fill: red;");
+                }
+            });
+            contentArea.getChildren().addAll(header, titleField, authorField, categoryBox, copiesField, saveBtn, msgLabel);
+        });
+
+        // --- btnDeleteBook ---
+        btnDeleteBook.setOnAction(e -> {
+            contentArea.getChildren().clear();
+            Label header = new Label("Delete Book Copies");
+            header.styleProperty().bind(Bindings.concat("-fx-font-size: ", rootPane.heightProperty().multiply(0.04).asString(), "px; -fx-font-weight: bold;"));
+
+            ScrollPane scroll = new ScrollPane();
+            scroll.setFitToWidth(true);
+            applyScaling(scroll, 0.6, 0.4, 0); 
+            VBox listVBox = new VBox(10);
+            listVBox.setAlignment(Pos.TOP_CENTER);
+            listVBox.setPadding(new Insets(10));
+            scroll.setContent(listVBox);
+            
+            Runnable populate = () -> {
+                listVBox.getChildren().clear();
+                for (LibraryBook libraryBook : library.getBooks()) {
+                    Book b = libraryBook.getBook();
+                    String info = "ID: " + b.getID() + "\n" + b.getTitle() + " - " + b.getAuthorName() 
+                            + "\nMüsait: " + libraryBook.getAvailableCopies() + "/" + libraryBook.getTotalCopies();
+                    Label bookLbl = new Label(info);
+                    bookLbl.styleProperty().bind(Bindings.concat("-fx-font-size: ", rootPane.heightProperty().multiply(0.02).asString(), "px; -fx-background-color: #f8f9fa; -fx-border-color: #cccccc; -fx-padding: 10;"));
+                    bookLbl.prefWidthProperty().bind(scroll.widthProperty().subtract(40));
+                    listVBox.getChildren().add(bookLbl);
+                }
+            };
+            populate.run();
+
+            HBox actionBox = new HBox(10);
+            actionBox.setAlignment(Pos.CENTER);
+            TextField idField = new TextField(); idField.setPromptText("Book ID");
+            applyScaling(idField, 0.2, 0.05, 0.02);
+            TextField amountField = new TextField(); amountField.setPromptText("Amount");
+            applyScaling(amountField, 0.2, 0.05, 0.02);
+            Button delBtn = new Button("Delete");
+            applyScaling(delBtn, 0.15, 0.05, 0.02);
+            actionBox.getChildren().addAll(idField, amountField, delBtn);
+
+            Label msgLabel = new Label();
+            msgLabel.styleProperty().bind(Bindings.concat("-fx-font-size: ", rootPane.heightProperty().multiply(0.02).asString(), "px;"));
+
+            delBtn.setOnAction(ev -> {
+                try {
+                    int idChoice = Integer.parseInt(idField.getText().trim());
+                    int amount = Integer.parseInt(amountField.getText().trim());
+                    LibraryBook selectedBook = library.findBook(idChoice);
+                    if (selectedBook == null) {
+                        msgLabel.setText("Bu ID'ye sahip bir kitap bulunamadı.");
+                        msgLabel.setStyle("-fx-text-fill: red;");
+                    } else if (selectedBook.getAvailableCopies() == 0) {
+                        msgLabel.setText("Bu kitabın tüm kopyaları ödünç alınmış. Silinebilecek kopya bulunmuyor.");
+                        msgLabel.setStyle("-fx-text-fill: red;");
+                    } else if (amount > selectedBook.getAvailableCopies()) {
+                        msgLabel.setText("Silmek istenen miktar müsait kopyadan (" + selectedBook.getAvailableCopies() + ") fazla olamaz.");
+                        msgLabel.setStyle("-fx-text-fill: red;");
+                    } else {
+                        boolean removed = library.removeCopies(idChoice, amount);
+                        if (removed) {
+                            msgLabel.setText("Kitap kopyaları başarıyla silindi.");
+                            msgLabel.setStyle("-fx-text-fill: green;");
+                            idField.clear(); amountField.clear();
+                            populate.run();
+                        } else {
+                            msgLabel.setText("Silme işlemi başarısız.");
+                            msgLabel.setStyle("-fx-text-fill: red;");
+                        }
+                    }
+                } catch (NumberFormatException ex) {
+                    msgLabel.setText("Lütfen ID ve Miktar için geçerli sayılar giriniz.");
+                    msgLabel.setStyle("-fx-text-fill: red;");
+                }
+            });
+
+            contentArea.getChildren().addAll(header, scroll, actionBox, msgLabel);
+        });
+
+        // --- btnEditBook ---
+        btnEditBook.setOnAction(e -> {
+            contentArea.getChildren().clear();
+            Label header = new Label("Edit Book");
+            header.styleProperty().bind(Bindings.concat("-fx-font-size: ", rootPane.heightProperty().multiply(0.04).asString(), "px; -fx-font-weight: bold;"));
+            
+            ScrollPane scroll = new ScrollPane();
+            scroll.setFitToWidth(true);
+            applyScaling(scroll, 0.6, 0.3, 0); 
+            VBox listVBox = new VBox(10);
+            listVBox.setAlignment(Pos.TOP_CENTER);
+            listVBox.setPadding(new Insets(10));
+            scroll.setContent(listVBox);
+            
+            Runnable populate = () -> {
+                listVBox.getChildren().clear();
+                for (LibraryBook libraryBook : library.getBooks()) {
+                    Book b = libraryBook.getBook();
+                    String info = "ID: " + b.getID() + "\n" + b.getTitle() + " - " + b.getAuthorName() 
+                            + " - " + b.getCategory() + "\nMüsait: " + libraryBook.getAvailableCopies() + "/" + libraryBook.getTotalCopies();
+                    Label bookLbl = new Label(info);
+                    bookLbl.styleProperty().bind(Bindings.concat("-fx-font-size: ", rootPane.heightProperty().multiply(0.02).asString(), "px; -fx-background-color: #f8f9fa; -fx-border-color: #cccccc; -fx-padding: 10;"));
+                    bookLbl.prefWidthProperty().bind(scroll.widthProperty().subtract(40));
+                    listVBox.getChildren().add(bookLbl);
+                }
+            };
+            populate.run();
+
+            HBox idBox = new HBox(10);
+            idBox.setAlignment(Pos.CENTER);
+            TextField idField = new TextField(); idField.setPromptText("Book ID to Edit");
+            applyScaling(idField, 0.3, 0.05, 0.02);
+            Button loadBtn = new Button("Load Book");
+            applyScaling(loadBtn, 0.15, 0.05, 0.02);
+            idBox.getChildren().addAll(idField, loadBtn);
+
+            VBox editBox = new VBox(10);
+            editBox.setAlignment(Pos.CENTER);
+            editBox.setVisible(false);
+            
+            TextField titleField = new TextField(); titleField.setPromptText("New Title");
+            applyScaling(titleField, 0.4, 0.05, 0.02);
+            TextField authorField = new TextField(); authorField.setPromptText("New Author");
+            applyScaling(authorField, 0.4, 0.05, 0.02);
+            ComboBox<String> categoryBox = new ComboBox<>();
+            categoryBox.getItems().addAll("Dünya Klasikleri", "Tarih", "Psikoloji", "Aşk", "Korku-Gerilim", "Bilim-Kurgu", "Polisiye", "Aksiyon-Macera", "Şiir", "Çocuk", "Felsefe", "Sosyoloji", "Biyografi", "Makale", "Deneme", "Bilim-Teknoloji");
+            applyScaling(categoryBox, 0.4, 0.05, 0.02);
+            TextField copiesField = new TextField(); copiesField.setPromptText("New Total Copies");
+            applyScaling(copiesField, 0.4, 0.05, 0.02);
+            Button saveBtn = new Button("Save Changes");
+            applyScaling(saveBtn, 0.2, 0.05, 0.02);
+            editBox.getChildren().addAll(titleField, authorField, categoryBox, copiesField, saveBtn);
+
+            Label msgLabel = new Label();
+            msgLabel.styleProperty().bind(Bindings.concat("-fx-font-size: ", rootPane.heightProperty().multiply(0.02).asString(), "px;"));
+
+            final int[] loadedId = {-1};
+
+            loadBtn.setOnAction(ev -> {
+                try {
+                    int id = Integer.parseInt(idField.getText().trim());
+                    LibraryBook selectedBook = library.findBook(id);
+                    if (selectedBook == null) {
+                        msgLabel.setText("Bu ID'ye sahip bir kitap bulunamadı.");
+                        msgLabel.setStyle("-fx-text-fill: red;");
+                        editBox.setVisible(false);
+                    } else {
+                        Book b = selectedBook.getBook();
+                        titleField.setText(b.getTitle());
+                        authorField.setText(b.getAuthorName());
+                        categoryBox.setValue(b.getCategory());
+                        copiesField.setText(String.valueOf(selectedBook.getTotalCopies()));
+                        loadedId[0] = id;
+                        editBox.setVisible(true);
+                        msgLabel.setText("");
+                    }
+                } catch (NumberFormatException ex) {
+                    msgLabel.setText("Geçerli bir ID giriniz.");
+                    msgLabel.setStyle("-fx-text-fill: red;");
+                }
+            });
+
+            saveBtn.setOnAction(ev -> {
+                try {
+                    LibraryBook selectedBook = library.findBook(loadedId[0]);
+                    int borrowed = selectedBook.getTotalCopies() - selectedBook.getAvailableCopies();
+                    int total = Integer.parseInt(copiesField.getText().trim());
+                    
+                    if (total < borrowed) {
+                        msgLabel.setText("Yeni toplam kopya sayısı, ödünçteki kopya sayısından (" + borrowed + ") az olamaz.");
+                        msgLabel.setStyle("-fx-text-fill: red;");
+                        return;
+                    }
+                    
+                    boolean updated = library.updateBook(loadedId[0], titleField.getText().trim(), authorField.getText().trim(), categoryBox.getValue(), total);
+                    if (updated) {
+                        msgLabel.setText("Kitap bilgileri başarıyla güncellendi.");
+                        msgLabel.setStyle("-fx-text-fill: green;");
+                        editBox.setVisible(false);
+                        idField.clear();
+                        populate.run();
+                    } else {
+                        msgLabel.setText("Güncelleme başarısız oldu.");
+                        msgLabel.setStyle("-fx-text-fill: red;");
+                    }
+                } catch (NumberFormatException ex) {
+                    msgLabel.setText("Kopya sayısını geçerli giriniz.");
+                    msgLabel.setStyle("-fx-text-fill: red;");
+                }
+            });
+
+            contentArea.getChildren().addAll(header, scroll, idBox, editBox, msgLabel);
+        });
+
+        // --- btnViewUsers ---
+        btnViewUsers.setOnAction(e -> {
+            contentArea.getChildren().clear();
+            Label header = new Label("Users");
+            header.styleProperty().bind(Bindings.concat("-fx-font-size: ", rootPane.heightProperty().multiply(0.04).asString(), "px; -fx-font-weight: bold;"));
+
+            ScrollPane scroll = new ScrollPane();
+            scroll.setFitToWidth(true);
+            applyScaling(scroll, 0.6, 0.6, 0); 
+            VBox listVBox = new VBox(10);
+            listVBox.setAlignment(Pos.TOP_CENTER);
+            listVBox.setPadding(new Insets(10));
+
+            for (User user : auth.getUsers()) {
+                String info = "Kullanıcı Adı: " + user.getUsername() + " | Rol: " + user.getRole();
+                Label userLbl = new Label(info);
+                userLbl.styleProperty().bind(Bindings.concat("-fx-font-size: ", rootPane.heightProperty().multiply(0.02).asString(), "px; -fx-background-color: #f8f9fa; -fx-border-color: #cccccc; -fx-padding: 10;"));
+                userLbl.prefWidthProperty().bind(scroll.widthProperty().subtract(40));
+                listVBox.getChildren().add(userLbl);
+            }
+            scroll.setContent(listVBox);
+            contentArea.getChildren().addAll(header, scroll);
+        });
+
+        // --- btnDeleteUser ---
+        btnDeleteUser.setOnAction(e -> {
+            contentArea.getChildren().clear();
+            Label header = new Label("Delete User");
+            header.styleProperty().bind(Bindings.concat("-fx-font-size: ", rootPane.heightProperty().multiply(0.04).asString(), "px; -fx-font-weight: bold;"));
+
+            ScrollPane scroll = new ScrollPane();
+            scroll.setFitToWidth(true);
+            applyScaling(scroll, 0.6, 0.5, 0); 
+            VBox listVBox = new VBox(10);
+            listVBox.setAlignment(Pos.TOP_CENTER);
+            listVBox.setPadding(new Insets(10));
+            scroll.setContent(listVBox);
+
+            Runnable populate = () -> {
+                listVBox.getChildren().clear();
+                for (User user : auth.getUsers()) {
+                    String info = "Kullanıcı Adı: " + user.getUsername() + " | Rol: " + user.getRole();
+                    Label userLbl = new Label(info);
+                    userLbl.styleProperty().bind(Bindings.concat("-fx-font-size: ", rootPane.heightProperty().multiply(0.02).asString(), "px; -fx-background-color: #f8f9fa; -fx-border-color: #cccccc; -fx-padding: 10;"));
+                    userLbl.prefWidthProperty().bind(scroll.widthProperty().subtract(40));
+                    listVBox.getChildren().add(userLbl);
+                }
+            };
+            populate.run();
+
+            HBox actionBox = new HBox(10);
+            actionBox.setAlignment(Pos.CENTER);
+            TextField userField = new TextField(); userField.setPromptText("Enter Username");
+            applyScaling(userField, 0.4, 0.05, 0.02);
+            Button delBtn = new Button("Delete");
+            applyScaling(delBtn, 0.15, 0.05, 0.02);
+            actionBox.getChildren().addAll(userField, delBtn);
+
+            Label msgLabel = new Label();
+            msgLabel.styleProperty().bind(Bindings.concat("-fx-font-size: ", rootPane.heightProperty().multiply(0.02).asString(), "px;"));
+
+            delBtn.setOnAction(ev -> {
+                String username = userField.getText().trim();
+                if (username.equals(currentUser.getUsername())) {
+                    msgLabel.setText("Kendi hesabınızı silemezsiniz.");
+                    msgLabel.setStyle("-fx-text-fill: red;");
+                    return;
+                }
+                User targetUser = null;
+                for (User user : auth.getUsers()) {
+                    if (user.getUsername().equals(username)) {
+                        targetUser = user;
+                        break;
+                    }
+                }
+                if (targetUser == null) {
+                    msgLabel.setText("Bu kullanıcı adına sahip bir kullanıcı bulunamadı.");
+                    msgLabel.setStyle("-fx-text-fill: red;");
+                    return;
+                }
+                boolean hasActiveLoan = false;
+                for (Loan loan : targetUser.getLoans()) {
+                    if (!loan.isReturned()) {
+                        hasActiveLoan = true;
+                        break;
+                    }
+                }
+                if (hasActiveLoan) {
+                    msgLabel.setText("Bu kullanıcı silinemez. Kullanıcının hâlâ kütüphaneden ödünç aldığı kitaplar bulunuyor.");
+                    msgLabel.setStyle("-fx-text-fill: red;");
+                    return;
+                }
+                boolean deleted = auth.removeUser(username);
+                if (deleted) {
+                    msgLabel.setText("Kullanıcı başarıyla silindi.");
+                    msgLabel.setStyle("-fx-text-fill: green;");
+                    userField.clear();
+                    populate.run();
+                } else {
+                    msgLabel.setText("Kullanıcı silinirken bir hata oluştu.");
+                    msgLabel.setStyle("-fx-text-fill: red;");
+                }
+            });
+            contentArea.getChildren().addAll(header, scroll, actionBox, msgLabel);
+        });
+
+        // --- btnViewLoans ---
+        btnViewLoans.setOnAction(e -> {
+            contentArea.getChildren().clear();
+            Label header = new Label("All Borrowed Books");
+            header.styleProperty().bind(Bindings.concat("-fx-font-size: ", rootPane.heightProperty().multiply(0.04).asString(), "px; -fx-font-weight: bold;"));
+
+            ScrollPane scroll = new ScrollPane();
+            scroll.setFitToWidth(true);
+            applyScaling(scroll, 0.6, 0.6, 0); 
+            VBox listVBox = new VBox(10);
+            listVBox.setAlignment(Pos.TOP_CENTER);
+            listVBox.setPadding(new Insets(10));
+            scroll.setContent(listVBox);
+
+            boolean hasActiveLoan = false;
+            for (User user : auth.getUsers()) {
+                for (Loan loan : user.getLoans()) {
+                    if (!loan.isReturned()) {
+                        hasActiveLoan = true;
+                        Book book = loan.getLibraryBook().getBook();
+                        String info = "Loan ID: " + loan.getLoanID() + "\nKullanıcı: " + user.getUsername() 
+                                + "\nKitap: " + book.getTitle() + " - " + book.getAuthorName() 
+                                + "\nKategori: " + book.getCategory() + "\nAlınma Tarihi: " + loan.getBorrowDate();
+                        Label bookLbl = new Label(info);
+                        bookLbl.styleProperty().bind(Bindings.concat("-fx-font-size: ", rootPane.heightProperty().multiply(0.02).asString(), "px; -fx-background-color: #f8f9fa; -fx-border-color: #cccccc; -fx-padding: 10;"));
+                        bookLbl.prefWidthProperty().bind(scroll.widthProperty().subtract(40));
+                        listVBox.getChildren().add(bookLbl);
+                    }
+                }
+            }
+            if (!hasActiveLoan) {
+                Label emptyLbl = new Label("Şu anda ödünç alınmış kitap bulunmuyor.");
+                emptyLbl.styleProperty().bind(Bindings.concat("-fx-font-size: ", rootPane.heightProperty().multiply(0.02).asString(), "px;"));
+                listVBox.getChildren().add(emptyLbl);
+            }
+            
+            contentArea.getChildren().addAll(header, scroll);
+        });
+
 
         // --- LOGOUT BUTTON ---
         Button logoutButton = new Button("Logout");
