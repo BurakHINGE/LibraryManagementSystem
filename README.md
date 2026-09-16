@@ -5,8 +5,8 @@
 ---
 
 ## 📌 Sürüm Bilgisi | Version Info  
- ● Current Version: 2.4.0
- ● Geçerli Sürüm: 2.4.0
+ ● Current Version: 3.0.0
+ ● Geçerli Sürüm: 3.0.0
 
 ---
  
@@ -19,7 +19,7 @@
 
 ## 🇬🇧 English
 
-This project is a **console-based personal library tracking system** developed using Java and Object-Oriented Programming (OOP) principles.  
+This project is a **modern JavaFX-based personal library management system** developed using Java and Object-Oriented Programming (OOP) principles.  
 Multiple users can register and log into the system, add books they have read, and view their personal reading lists.
 
 Each user manages their own books independently, and all data is stored persistently using a JSON file.  
@@ -30,21 +30,21 @@ The project focuses on practicing:
 - Object-Oriented Programming (OOP)
 - Class responsibility separation
 - JSON-based data persistence
-- Console-based application flow
+- JavaFX-based graphical user interface (GUI)
 
 ---
 
 # ✨ Features
 
-- 👤 User registration system  
-- 🔐 Secure login mechanism 
-- 🔐 Password requirements
-- 📚 Personal book list for each user  
-- ➕ Add books with title and author  
-- 📖 View saved books anytime after login  
-- 💾 Persistent data storage using JSON  
-- 🗂 Automatic JSON file creation if it does not exist  
-- 🧱 Object-Oriented design (Library, User, Book classes)
+- 🖥️ **Modern JavaFX Desktop Interface** (Completely replaces console UI)
+- 👤 User and Admin role-based registration & login system
+- 🔐 Secure authentication with password requirements
+- 📚 **Personal Bookshelf:** Add, edit, and track reading status & ratings for your books
+- 🏛️ **Library System:** Borrow and return books with live copy tracking
+- ⚙️ **Smart Editing:** Intelligent field locking depending on whether the book is personal or from the library
+- 👑 **Admin Panel:** Complete control to add/edit/delete books, manage users, and view active loans
+- 💾 Persistent data storage with automatic JSON saves
+- 🧱 Strong Object-Oriented design (Library, User, Book, Loan classes)
 
 ---
 
@@ -77,7 +77,7 @@ java -cp ".;lib/json.jar;Codes" MainLibrary
 
 ## 🇹🇷 Türkçe
 
-Bu proje, Java ve Nesne Yönelimli Programlama (OOP) prensipleri kullanılarak geliştirilmiş **konsol tabanlı kişisel kütüphane takip sistemidir**.  
+Bu proje, Java ve Nesne Yönelimli Programlama (OOP) prensipleri kullanılarak geliştirilmiş **modern JavaFX tabanlı bir kütüphane ve kitaplık yönetim sistemidir**.  
 Birden fazla kullanıcı sisteme kayıt olabilir, giriş yapabilir ve okudukları kitapları kendi hesaplarına ekleyebilir.
 
 Her kullanıcı kendi kitap listesini bağımsız olarak yönetir ve tüm veriler JSON dosyası kullanılarak kalıcı olarak saklanır.  
@@ -88,21 +88,21 @@ Projenin amacı:
 - OOP tasarım pratiği yapmak
 - Sınıf sorumluluklarını doğru ayırmak
 - JSON ile veri kalıcılığı sağlamak
-- Konsol tabanlı uygulama mantığını öğrenmek
+- JavaFX ile Masaüstü Arayüz (GUI) geliştirmeyi öğrenmek
 
 ---
 
 ## ✨ Özellikler
 
-- 👤 Kullanıcı kayıt sistemi  
-- 🔐 Güvenli giriş mekanizması  
-- 🔐 Şifre gereklilikleri
-- 📚 Her kullanıcı için kişisel kitap listesi  
-- ➕ Kitap adı ve yazar bilgisi ekleme  
-- 📖 Giriş yaptıktan sonra kayıtlı kitapları görüntüleme  
-- 💾 JSON ile kalıcı veri saklama  
-- 🗂 JSON dosyası yoksa otomatik oluşturma  
-- 🧱 Nesne Yönelimli Programlama tasarımı (Library, User, Book sınıfları)
+- 🖥️ **Modern JavaFX Masaüstü Arayüzü** (Konsol yapısından tamamen GUI'ye geçiş)
+- 👤 Kullanıcı ve Admin rolleri ile kayıt & giriş sistemi
+- 🔐 Şifre gereksinimli güvenli kimlik doğrulama mekanizması
+- 📚 **Kişisel Kitaplık:** Kitap ekleme, okuma durumu ve puan güncelleme
+- 🏛️ **Kütüphane Sistemi:** Kopya takibi ile kitap ödünç alma ve iade etme
+- ⚙️ **Akıllı Düzenleme:** Kütüphaneden alınan ile kişisel kitapları ayırıp formda özel kilitleme mantığı
+- 👑 **Admin Paneli:** Kitapları, kullanıcıları yönetme ve tüm ödünç (Loan) işlemlerini takip etme
+- 💾 JSON ile verilerin otomatik ve kalıcı olarak saklanması
+- 🧱 Güçlü Nesne Yönelimli Programlama tasarımı (Library, User, Book, Loan sınıfları)
 
 ---
 
@@ -135,6 +135,7 @@ java -cp ".;lib/json.jar;Codes" MainLibrary
 
 | Version | Date       | Description |
 |--------:|------------|-------------|
+| v3.0.0  | 2026-09-16 | Migrated project to a JavaFX Desktop Application, completely removing terminal interfaces / Proje JavaFX Masaüstü Uygulamasına taşındı, terminal arayüzleri tamamen kaldırıldı |
 | v2.4.0  | 2026-08-27 | 80 books and their copies have been added to library / 80 kitap ve kopyaları kütüphaneye eklendi |
 | v2.3.0  | 2026-08-26 | Input manager and comment lines have been created / Girdi yönetimi ve yorum satırları oluşturuldu |
 | v2.2.0  | 2026-08-25 | Library system has been created. / Kütüphane sistemi oluşturuldu |
