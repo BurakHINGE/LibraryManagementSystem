@@ -878,5 +878,16 @@
     },
     "totalCopies": 3,
     "availableCopies": 3
+  },
+  {
+    "book": {
+      "id": 85,
+      "title": "Seksen Günde Devrialem",
+      "authorName": "Jules Verne",
+      "category": "Dünya Klasikleri",
+      "point": 0
+    },
+    "totalCopies": 5,
+    "availableCopies": 4
   }
 ]
