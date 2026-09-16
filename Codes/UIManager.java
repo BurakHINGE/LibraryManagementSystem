@@ -71,7 +71,7 @@ public class UIManager {
         exitButton.setOnAction(e -> {
             if (auth != null && auth.getUsers() != null) {
                 JsonManager.saveUsers(auth.getUsers());
-                System.out.println("DEBUG: Uygulama kapatiliyor, JSON kaydedildi.");
+                System.out.println("DEBUG: Application closing, JSON saved.");
             }
             stage.close();
         });
@@ -394,7 +394,7 @@ public class UIManager {
                 }
 
                 if (!found) {
-                    msgLabel.setText("Aradığınız kitap bulunamadı."); // Exact terminal wording
+                    msgLabel.setText("Book not found."); // Exact terminal wording
                     msgLabel.setStyle("-fx-text-fill: red;");
                 }
             });
@@ -453,26 +453,26 @@ public class UIManager {
                     LibraryBook chosenLibraryBook = library.findBook(idChoice);
 
                     if (chosenLibraryBook == null) {
-                        msgLabel.setText("Bu ID'ye sahip bir kitap bulunamadı.");
+                        msgLabel.setText("No book found with this ID.");
                         msgLabel.setStyle("-fx-text-fill: red;");
                     } else if (chosenLibraryBook.getAvailableCopies() <= 0) {
-                        msgLabel.setText("Bu kitabın şu anda müsait kopyası bulunmuyor.");
+                        msgLabel.setText("No available copies for this book at the moment.");
                         msgLabel.setStyle("-fx-text-fill: red;");
                     } else {
                         boolean borrowed = library.borrowBookFromLibrary(idChoice, currentUser);
                         if (borrowed) {
                             JsonManager.saveUsers(auth.getUsers());
-                            msgLabel.setText("Kitap başarıyla ödünç alındı.");
+                            msgLabel.setText("Book borrowed successfully.");
                             msgLabel.setStyle("-fx-text-fill: green;");
                             idField.clear();
                             populateBooks.run(); // Refresh list to update available copies
                         } else {
-                            msgLabel.setText("Ödünç alma işlemi başarısız oldu.");
+                            msgLabel.setText("Borrowing process failed.");
                             msgLabel.setStyle("-fx-text-fill: red;");
                         }
                     }
                 } catch (NumberFormatException ex) {
-                    msgLabel.setText("Geçerli bir ID giriniz.");
+                    msgLabel.setText("Please enter a valid ID.");
                     msgLabel.setStyle("-fx-text-fill: red;");
                 }
             });
@@ -515,7 +515,7 @@ public class UIManager {
                 }
                 
                 if (!hasActiveLoan) {
-                    listMsgLabel.setText("Ödünç alınan kitabınız bulunmuyor.");
+                    listMsgLabel.setText("You have no borrowed books.");
                 } else {
                     listMsgLabel.setText("");
                 }
@@ -544,16 +544,16 @@ public class UIManager {
                     
                     if (returned) {
                         JsonManager.saveUsers(auth.getUsers());
-                        msgLabel.setText("Kitap başarıyla iade edildi.");
+                        msgLabel.setText("Book returned successfully.");
                         msgLabel.setStyle("-fx-text-fill: green;");
                         idField.clear();
                         populateLoans.run();
                     } else {
-                        msgLabel.setText("Geçersiz Loan ID veya bu kitap zaten iade edilmiş.");
+                        msgLabel.setText("Invalid Loan ID or book already returned.");
                         msgLabel.setStyle("-fx-text-fill: red;");
                     }
                 } catch (NumberFormatException ex) {
-                    msgLabel.setText("Geçerli bir Loan ID giriniz.");
+                    msgLabel.setText("Please enter a valid Loan ID.");
                     msgLabel.setStyle("-fx-text-fill: red;");
                 }
             });
@@ -589,7 +589,7 @@ public class UIManager {
             }
 
             if (!hasActiveLoan) {
-                Label emptyLbl = new Label("Ödünç alınan kitabınız bulunmuyor.");
+                Label emptyLbl = new Label("You have no borrowed books.");
                 emptyLbl.styleProperty().bind(Bindings.concat("-fx-font-size: ", rootPane.heightProperty().multiply(0.02).asString(), "px;"));
                 listVBox.getChildren().add(emptyLbl);
             }
@@ -707,7 +707,7 @@ public class UIManager {
                         msgLabel.setText("Book added to bookshelf successfully!");
                         msgLabel.setStyle("-fx-text-fill: green;");
                         JsonManager.saveUsers(auth.getUsers()); 
-                        System.out.println("DEBUG: Kitap eklendi, JSON'a yazma tetiklendi.");
+                        System.out.println("DEBUG: Book added, JSON writing triggered.");
                         
                         titleField.clear();
                         authorField.clear();
@@ -753,8 +753,91 @@ public class UIManager {
                     String info = b.getTitle() + " - " + b.getAuthorName() + "\nCategory: " + b.getCategory() + " | Status: " + record.getStatus() + " | Rating: " + record.getRating() + "/10";
                     Label bookLbl = new Label(info);
                     bookLbl.styleProperty().bind(Bindings.concat("-fx-font-size: ", rootPane.heightProperty().multiply(0.02).asString(), "px; -fx-background-color: #f8f9fa; -fx-border-color: #cccccc; -fx-padding: 10;"));
-                    bookLbl.prefWidthProperty().bind(scroll.widthProperty().subtract(40));
-                    listVBox.getChildren().add(bookLbl);
+                    bookLbl.setMaxWidth(Double.MAX_VALUE);
+                    HBox.setHgrow(bookLbl, javafx.scene.layout.Priority.ALWAYS);
+
+                    Button gearBtn = new Button("⚙");
+                    gearBtn.styleProperty().bind(Bindings.concat("-fx-font-size: ", rootPane.heightProperty().multiply(0.02).asString(), "px; -fx-cursor: hand;"));
+                    
+                    gearBtn.setOnAction(ev -> {
+                        contentArea.getChildren().clear();
+                        Label editHeader = new Label("Edit Book");
+                        editHeader.styleProperty().bind(Bindings.concat("-fx-font-size: ", rootPane.heightProperty().multiply(0.04).asString(), "px; -fx-font-weight: bold;"));
+
+                        TextField titleField = new TextField(b.getTitle());
+                        applyScaling(titleField, 0.4, 0.05, 0.02);
+                        TextField authorField = new TextField(b.getAuthorName());
+                        applyScaling(authorField, 0.4, 0.05, 0.02);
+                        
+                        ComboBox<String> categoryBox = new ComboBox<>();
+                        categoryBox.getItems().addAll("Dünya Klasikleri", "Tarih", "Psikoloji", "Aşk", "Korku-Gerilim", "Bilim-Kurgu", "Polisiye", "Aksiyon-Macera", "Şiir", "Çocuk", "Felsefe", "Sosyoloji", "Biyografi", "Makale", "Deneme", "Bilim-Teknoloji");
+                        categoryBox.setValue(b.getCategory());
+                        applyScaling(categoryBox, 0.4, 0.05, 0.02);
+
+                        ComboBox<ReadingStatus> statusBox = new ComboBox<>();
+                        statusBox.getItems().addAll(ReadingStatus.values());
+                        statusBox.setValue(record.getStatus());
+                        applyScaling(statusBox, 0.4, 0.05, 0.02);
+
+                        TextField ratingField = new TextField(String.valueOf(record.getRating()));
+                        ratingField.setPromptText("Rating (0-10)");
+                        applyScaling(ratingField, 0.4, 0.05, 0.02);
+
+                        if (record.getSource() == BookSource.LIBRARY) {
+                            titleField.setDisable(true);
+                            authorField.setDisable(true);
+                            categoryBox.setDisable(true);
+                        }
+
+                        Button saveBtn = new Button("Save Changes");
+                        applyScaling(saveBtn, 0.2, 0.05, 0.02);
+                        Button backBtn = new Button("Back");
+                        applyScaling(backBtn, 0.2, 0.05, 0.02);
+
+                        Label msgLabel = new Label();
+                        msgLabel.styleProperty().bind(Bindings.concat("-fx-font-size: ", rootPane.heightProperty().multiply(0.02).asString(), "px;"));
+
+                        HBox buttonsBox = new HBox(10, saveBtn, backBtn);
+                        buttonsBox.setAlignment(Pos.CENTER);
+
+                        saveBtn.setOnAction(saveEv -> {
+                            try {
+                                int r = Integer.parseInt(ratingField.getText().trim());
+                                if (r < 0 || r > 10) {
+                                    msgLabel.setText("Please enter a valid rating (0-10).");
+                                    msgLabel.setStyle("-fx-text-fill: red;");
+                                    return;
+                                }
+                                if (record.getSource() == BookSource.PERSONAL) {
+                                    if (titleField.getText().trim().isEmpty() || authorField.getText().trim().isEmpty() || categoryBox.getValue() == null) {
+                                        msgLabel.setText("Please fill in all fields.");
+                                        msgLabel.setStyle("-fx-text-fill: red;");
+                                        return;
+                                    }
+                                    b.setTitle(titleField.getText().trim());
+                                    b.setAuthorName(authorField.getText().trim());
+                                    b.setCategory(categoryBox.getValue());
+                                }
+                                record.setStatus(statusBox.getValue());
+                                record.setRating(r);
+                                
+                                JsonManager.saveUsers(auth.getUsers());
+                                btnSeeBookshelf.fire();
+                            } catch (NumberFormatException ex) {
+                                msgLabel.setText("Please enter a valid rating (0-10).");
+                                msgLabel.setStyle("-fx-text-fill: red;");
+                            }
+                        });
+
+                        backBtn.setOnAction(backEv -> btnSeeBookshelf.fire());
+
+                        contentArea.getChildren().addAll(editHeader, titleField, authorField, categoryBox, statusBox, ratingField, buttonsBox, msgLabel);
+                    });
+
+                    HBox row = new HBox(10, bookLbl, gearBtn);
+                    row.setAlignment(Pos.CENTER_LEFT);
+                    row.prefWidthProperty().bind(scroll.widthProperty().subtract(40));
+                    listVBox.getChildren().add(row);
                 }
             }
             
@@ -859,14 +942,14 @@ public class UIManager {
             listVBox.setAlignment(Pos.TOP_CENTER);
             listVBox.setPadding(new Insets(10));
             if (library.getBooks().isEmpty()) {
-                Label emptyLbl = new Label("Kütüphanede kitap bulunmuyor.");
+                Label emptyLbl = new Label("Library is empty.");
                 emptyLbl.styleProperty().bind(Bindings.concat("-fx-font-size: ", rootPane.heightProperty().multiply(0.02).asString(), "px;"));
                 listVBox.getChildren().add(emptyLbl);
             } else {
                 for (LibraryBook libraryBook : library.getBooks()) {
                     Book b = libraryBook.getBook();
                     String info = b.getTitle() + " - " + b.getAuthorName() + " - " + b.getCategory() 
-                            + "\nMüsait: " + libraryBook.getAvailableCopies() + "/" + libraryBook.getTotalCopies();
+                            + "\nAvailable: " + libraryBook.getAvailableCopies() + "/" + libraryBook.getTotalCopies();
                     Label bookLbl = new Label(info);
                     bookLbl.styleProperty().bind(Bindings.concat("-fx-font-size: ", rootPane.heightProperty().multiply(0.02).asString(), "px; -fx-background-color: #f8f9fa; -fx-border-color: #cccccc; -fx-padding: 10;"));
                     bookLbl.prefWidthProperty().bind(scroll.widthProperty().subtract(40));
@@ -911,7 +994,7 @@ public class UIManager {
                         found = true;
                         Book b = libraryBook.getBook();
                         String info = b.getTitle() + " - " + b.getAuthorName() + " - " + b.getCategory() 
-                                + "\nMüsait: " + libraryBook.getAvailableCopies() + "/" + libraryBook.getTotalCopies();
+                                + "\nAvailable: " + libraryBook.getAvailableCopies() + "/" + libraryBook.getTotalCopies();
                         Label bookLbl = new Label(info);
                         bookLbl.styleProperty().bind(Bindings.concat("-fx-font-size: ", rootPane.heightProperty().multiply(0.02).asString(), "px; -fx-background-color: #f8f9fa; -fx-border-color: #cccccc; -fx-padding: 10;"));
                         bookLbl.prefWidthProperty().bind(scroll.widthProperty().subtract(40));
@@ -919,7 +1002,7 @@ public class UIManager {
                     }
                 }
                 if (!found) {
-                    msgLabel.setText("Aradığınız kitap bulunamadı.");
+                    msgLabel.setText("Book not found.");
                     msgLabel.setStyle("-fx-text-fill: red;");
                 }
             });
@@ -955,22 +1038,22 @@ public class UIManager {
                     String cat = categoryBox.getValue();
                     int copies = Integer.parseInt(copiesField.getText().trim());
                     if (title.isEmpty() || author.isEmpty() || cat == null || copies < 1) {
-                        msgLabel.setText("Lütfen tüm alanları geçerli doldurun.");
+                        msgLabel.setText("Please fill all fields properly.");
                         msgLabel.setStyle("-fx-text-fill: red;");
                         return;
                     }
                     Book book = new Book(title, author, cat);
                     LibraryBook libraryBook = new LibraryBook(book, copies);
                     if (library.addBook(libraryBook)) {
-                        msgLabel.setText("Kitap başarıyla kütüphaneye eklendi.");
+                        msgLabel.setText("Book successfully added to the library.");
                         msgLabel.setStyle("-fx-text-fill: green;");
                         titleField.clear(); authorField.clear(); categoryBox.setValue(null); copiesField.clear();
                     } else {
-                        msgLabel.setText("Kitap kütüphaneye eklenemedi (ID çakışması).");
+                        msgLabel.setText("Failed to add book (ID conflict).");
                         msgLabel.setStyle("-fx-text-fill: red;");
                     }
                 } catch (NumberFormatException ex) {
-                    msgLabel.setText("Geçerli bir kopya sayısı giriniz.");
+                    msgLabel.setText("Please enter a valid number of copies.");
                     msgLabel.setStyle("-fx-text-fill: red;");
                 }
             });
@@ -996,7 +1079,7 @@ public class UIManager {
                 for (LibraryBook libraryBook : library.getBooks()) {
                     Book b = libraryBook.getBook();
                     String info = "ID: " + b.getID() + "\n" + b.getTitle() + " - " + b.getAuthorName() 
-                            + "\nMüsait: " + libraryBook.getAvailableCopies() + "/" + libraryBook.getTotalCopies();
+                            + "\nAvailable: " + libraryBook.getAvailableCopies() + "/" + libraryBook.getTotalCopies();
                     Label bookLbl = new Label(info);
                     bookLbl.styleProperty().bind(Bindings.concat("-fx-font-size: ", rootPane.heightProperty().multiply(0.02).asString(), "px; -fx-background-color: #f8f9fa; -fx-border-color: #cccccc; -fx-padding: 10;"));
                     bookLbl.prefWidthProperty().bind(scroll.widthProperty().subtract(40));
@@ -1024,28 +1107,28 @@ public class UIManager {
                     int amount = Integer.parseInt(amountField.getText().trim());
                     LibraryBook selectedBook = library.findBook(idChoice);
                     if (selectedBook == null) {
-                        msgLabel.setText("Bu ID'ye sahip bir kitap bulunamadı.");
+                        msgLabel.setText("No book found with this ID.");
                         msgLabel.setStyle("-fx-text-fill: red;");
                     } else if (selectedBook.getAvailableCopies() == 0) {
-                        msgLabel.setText("Bu kitabın tüm kopyaları ödünç alınmış. Silinebilecek kopya bulunmuyor.");
+                        msgLabel.setText("All copies are borrowed. No copies left to delete.");
                         msgLabel.setStyle("-fx-text-fill: red;");
                     } else if (amount > selectedBook.getAvailableCopies()) {
-                        msgLabel.setText("Silmek istenen miktar müsait kopyadan (" + selectedBook.getAvailableCopies() + ") fazla olamaz.");
+                        msgLabel.setText("Amount to delete cannot exceed available copies (" + selectedBook.getAvailableCopies() + ").");
                         msgLabel.setStyle("-fx-text-fill: red;");
                     } else {
                         boolean removed = library.removeCopies(idChoice, amount);
                         if (removed) {
-                            msgLabel.setText("Kitap kopyaları başarıyla silindi.");
+                            msgLabel.setText("Book copies successfully deleted.");
                             msgLabel.setStyle("-fx-text-fill: green;");
                             idField.clear(); amountField.clear();
                             populate.run();
                         } else {
-                            msgLabel.setText("Silme işlemi başarısız.");
+                            msgLabel.setText("Deletion failed.");
                             msgLabel.setStyle("-fx-text-fill: red;");
                         }
                     }
                 } catch (NumberFormatException ex) {
-                    msgLabel.setText("Lütfen ID ve Miktar için geçerli sayılar giriniz.");
+                    msgLabel.setText("Please enter valid numbers for ID and Amount.");
                     msgLabel.setStyle("-fx-text-fill: red;");
                 }
             });
@@ -1072,7 +1155,7 @@ public class UIManager {
                 for (LibraryBook libraryBook : library.getBooks()) {
                     Book b = libraryBook.getBook();
                     String info = "ID: " + b.getID() + "\n" + b.getTitle() + " - " + b.getAuthorName() 
-                            + " - " + b.getCategory() + "\nMüsait: " + libraryBook.getAvailableCopies() + "/" + libraryBook.getTotalCopies();
+                            + " - " + b.getCategory() + "\nAvailable: " + libraryBook.getAvailableCopies() + "/" + libraryBook.getTotalCopies();
                     Label bookLbl = new Label(info);
                     bookLbl.styleProperty().bind(Bindings.concat("-fx-font-size: ", rootPane.heightProperty().multiply(0.02).asString(), "px; -fx-background-color: #f8f9fa; -fx-border-color: #cccccc; -fx-padding: 10;"));
                     bookLbl.prefWidthProperty().bind(scroll.widthProperty().subtract(40));
@@ -1116,7 +1199,7 @@ public class UIManager {
                     int id = Integer.parseInt(idField.getText().trim());
                     LibraryBook selectedBook = library.findBook(id);
                     if (selectedBook == null) {
-                        msgLabel.setText("Bu ID'ye sahip bir kitap bulunamadı.");
+                        msgLabel.setText("No book found with this ID.");
                         msgLabel.setStyle("-fx-text-fill: red;");
                         editBox.setVisible(false);
                     } else {
@@ -1130,7 +1213,7 @@ public class UIManager {
                         msgLabel.setText("");
                     }
                 } catch (NumberFormatException ex) {
-                    msgLabel.setText("Geçerli bir ID giriniz.");
+                    msgLabel.setText("Please enter a valid ID.");
                     msgLabel.setStyle("-fx-text-fill: red;");
                 }
             });
@@ -1142,24 +1225,24 @@ public class UIManager {
                     int total = Integer.parseInt(copiesField.getText().trim());
                     
                     if (total < borrowed) {
-                        msgLabel.setText("Yeni toplam kopya sayısı, ödünçteki kopya sayısından (" + borrowed + ") az olamaz.");
+                        msgLabel.setText("New total copies cannot be less than borrowed copies (" + borrowed + ").");
                         msgLabel.setStyle("-fx-text-fill: red;");
                         return;
                     }
                     
                     boolean updated = library.updateBook(loadedId[0], titleField.getText().trim(), authorField.getText().trim(), categoryBox.getValue(), total);
                     if (updated) {
-                        msgLabel.setText("Kitap bilgileri başarıyla güncellendi.");
+                        msgLabel.setText("Book info updated successfully.");
                         msgLabel.setStyle("-fx-text-fill: green;");
                         editBox.setVisible(false);
                         idField.clear();
                         populate.run();
                     } else {
-                        msgLabel.setText("Güncelleme başarısız oldu.");
+                        msgLabel.setText("Update failed.");
                         msgLabel.setStyle("-fx-text-fill: red;");
                     }
                 } catch (NumberFormatException ex) {
-                    msgLabel.setText("Kopya sayısını geçerli giriniz.");
+                    msgLabel.setText("Please enter a valid copy number.");
                     msgLabel.setStyle("-fx-text-fill: red;");
                 }
             });
@@ -1181,7 +1264,7 @@ public class UIManager {
             listVBox.setPadding(new Insets(10));
 
             for (User user : auth.getUsers()) {
-                String info = "Kullanıcı Adı: " + user.getUsername() + " | Rol: " + user.getRole();
+                String info = "Username: " + user.getUsername() + " | Role: " + user.getRole();
                 Label userLbl = new Label(info);
                 userLbl.styleProperty().bind(Bindings.concat("-fx-font-size: ", rootPane.heightProperty().multiply(0.02).asString(), "px; -fx-background-color: #f8f9fa; -fx-border-color: #cccccc; -fx-padding: 10;"));
                 userLbl.prefWidthProperty().bind(scroll.widthProperty().subtract(40));
@@ -1208,7 +1291,7 @@ public class UIManager {
             Runnable populate = () -> {
                 listVBox.getChildren().clear();
                 for (User user : auth.getUsers()) {
-                    String info = "Kullanıcı Adı: " + user.getUsername() + " | Rol: " + user.getRole();
+                    String info = "Username: " + user.getUsername() + " | Role: " + user.getRole();
                     Label userLbl = new Label(info);
                     userLbl.styleProperty().bind(Bindings.concat("-fx-font-size: ", rootPane.heightProperty().multiply(0.02).asString(), "px; -fx-background-color: #f8f9fa; -fx-border-color: #cccccc; -fx-padding: 10;"));
                     userLbl.prefWidthProperty().bind(scroll.widthProperty().subtract(40));
@@ -1231,7 +1314,7 @@ public class UIManager {
             delBtn.setOnAction(ev -> {
                 String username = userField.getText().trim();
                 if (username.equals(currentUser.getUsername())) {
-                    msgLabel.setText("Kendi hesabınızı silemezsiniz.");
+                    msgLabel.setText("You cannot delete your own account.");
                     msgLabel.setStyle("-fx-text-fill: red;");
                     return;
                 }
@@ -1243,7 +1326,7 @@ public class UIManager {
                     }
                 }
                 if (targetUser == null) {
-                    msgLabel.setText("Bu kullanıcı adına sahip bir kullanıcı bulunamadı.");
+                    msgLabel.setText("No user found with this username.");
                     msgLabel.setStyle("-fx-text-fill: red;");
                     return;
                 }
@@ -1255,18 +1338,18 @@ public class UIManager {
                     }
                 }
                 if (hasActiveLoan) {
-                    msgLabel.setText("Bu kullanıcı silinemez. Kullanıcının hâlâ kütüphaneden ödünç aldığı kitaplar bulunuyor.");
+                    msgLabel.setText("Cannot delete user. The user still has active loans.");
                     msgLabel.setStyle("-fx-text-fill: red;");
                     return;
                 }
                 boolean deleted = auth.removeUser(username);
                 if (deleted) {
-                    msgLabel.setText("Kullanıcı başarıyla silindi.");
+                    msgLabel.setText("User deleted successfully.");
                     msgLabel.setStyle("-fx-text-fill: green;");
                     userField.clear();
                     populate.run();
                 } else {
-                    msgLabel.setText("Kullanıcı silinirken bir hata oluştu.");
+                    msgLabel.setText("An error occurred while deleting the user.");
                     msgLabel.setStyle("-fx-text-fill: red;");
                 }
             });
@@ -1293,9 +1376,9 @@ public class UIManager {
                     if (!loan.isReturned()) {
                         hasActiveLoan = true;
                         Book book = loan.getLibraryBook().getBook();
-                        String info = "Loan ID: " + loan.getLoanID() + "\nKullanıcı: " + user.getUsername() 
-                                + "\nKitap: " + book.getTitle() + " - " + book.getAuthorName() 
-                                + "\nKategori: " + book.getCategory() + "\nAlınma Tarihi: " + loan.getBorrowDate();
+                        String info = "Loan ID: " + loan.getLoanID() + "\nUser: " + user.getUsername() 
+                                + "\nBook: " + book.getTitle() + " - " + book.getAuthorName() 
+                                + "\nCategory: " + book.getCategory() + "\nBorrow Date: " + loan.getBorrowDate();
                         Label bookLbl = new Label(info);
                         bookLbl.styleProperty().bind(Bindings.concat("-fx-font-size: ", rootPane.heightProperty().multiply(0.02).asString(), "px; -fx-background-color: #f8f9fa; -fx-border-color: #cccccc; -fx-padding: 10;"));
                         bookLbl.prefWidthProperty().bind(scroll.widthProperty().subtract(40));
@@ -1304,7 +1387,7 @@ public class UIManager {
                 }
             }
             if (!hasActiveLoan) {
-                Label emptyLbl = new Label("Şu anda ödünç alınmış kitap bulunmuyor.");
+                Label emptyLbl = new Label("There are currently no borrowed books.");
                 emptyLbl.styleProperty().bind(Bindings.concat("-fx-font-size: ", rootPane.heightProperty().multiply(0.02).asString(), "px;"));
                 listVBox.getChildren().add(emptyLbl);
             }
