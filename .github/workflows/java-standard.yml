@@ -16,8 +16,9 @@ jobs:
     - name: Setup JDK
       uses: actions/setup-java@v4
       with:
-        distribution: temurin
+        distribution: zulu
         java-version: "17"
+        java-package: jdk+fx
 
     - name: Create lib directory
       run: mkdir -p lib
