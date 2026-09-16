@@ -14,7 +14,7 @@ public class MainLibrary extends Application {
         UserMenu userMenu = new UserMenu(library, auth);
         AdminMenu adminMenu = new AdminMenu(library, auth);
         MenuManager mainMenu = new MenuManager(auth, userMenu, adminMenu);
-        UIManager interfaceManager = new UIManager(primaryStage, auth);
+        UIManager interfaceManager = new UIManager(primaryStage, auth, library);
 
         primaryStage.setScene(interfaceManager.startApp());
 		primaryStage.setTitle("Library & Bookshelf App");
