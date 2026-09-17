@@ -647,7 +647,7 @@ public class UIManager {
             boolean isVisible = librarySubMenu.isVisible();
             librarySubMenu.setVisible(!isVisible);
             librarySubMenu.setManaged(!isVisible);
-            updateSidebarMainButton(libraryMainButton, "Library", !isVisible);
+            updateSidebarMainButton(libraryMainButton, "Library", !isVisible, sidebar);
         });
 
         libraryContainer.getChildren().addAll(libraryMainButton, librarySubMenu);
@@ -900,7 +900,7 @@ public class UIManager {
             boolean isVisible = bookshelfSubMenu.isVisible();
             bookshelfSubMenu.setVisible(!isVisible);
             bookshelfSubMenu.setManaged(!isVisible);
-            updateSidebarMainButton(bookshelfMainButton, "Bookshelf", !isVisible);
+            updateSidebarMainButton(bookshelfMainButton, "Bookshelf", !isVisible, sidebar);
         });
 
         bookshelfContainer.getChildren().addAll(bookshelfMainButton, bookshelfSubMenu);
@@ -962,7 +962,7 @@ public class UIManager {
             boolean isVisible = manageSubMenu.isVisible();
             manageSubMenu.setVisible(!isVisible);
             manageSubMenu.setManaged(!isVisible);
-            updateSidebarMainButton(manageMainButton, "Management", !isVisible);
+            updateSidebarMainButton(manageMainButton, "Management", !isVisible, sidebar);
         });
 
         manageContainer.getChildren().addAll(manageMainButton, manageSubMenu);
@@ -1540,23 +1540,26 @@ public class UIManager {
     }
 
     // Create a main category button for the sidebar
-    private void updateSidebarMainButton(Button btn, String title, boolean isVisible) {
-        BorderPane pane = new BorderPane();
-        pane.prefWidthProperty().bind(btn.widthProperty());
+    private void updateSidebarMainButton(Button btn, String title, boolean isVisible, VBox sidebarBox) {
+        javafx.scene.layout.HBox box = new javafx.scene.layout.HBox();
+        box.setAlignment(Pos.CENTER_LEFT);
+        box.setMouseTransparent(true);
         
         Label titleLbl = new Label(title);
         titleLbl.styleProperty().bind(Bindings.concat("-fx-font-size: ", rootPane.heightProperty().multiply(0.02).asString(), "px; -fx-font-weight: bold; -fx-padding: 0 0 0 20;"));
         
+        javafx.scene.layout.Region spacer = new javafx.scene.layout.Region();
+        javafx.scene.layout.HBox.setHgrow(spacer, javafx.scene.layout.Priority.ALWAYS);
+        
         Label arrowLbl = new Label(isVisible ? "▲" : "▼");
         arrowLbl.styleProperty().bind(Bindings.concat("-fx-font-size: ", rootPane.heightProperty().multiply(0.02).asString(), "px; -fx-font-weight: bold; -fx-padding: 0 20 0 0;"));
         
-        pane.setLeft(titleLbl);
-        BorderPane.setAlignment(titleLbl, Pos.CENTER_LEFT);
-        pane.setRight(arrowLbl);
-        BorderPane.setAlignment(arrowLbl, Pos.CENTER_RIGHT);
+        box.getChildren().addAll(titleLbl, spacer, arrowLbl);
+        // Bind width to avoid circular dependency but still stretch
+        if (sidebarBox != null) box.prefWidthProperty().bind(sidebarBox.prefWidthProperty().subtract(20));
         
         btn.setText("");
-        btn.setGraphic(pane);
+        btn.setGraphic(box);
         btn.setContentDisplay(javafx.scene.control.ContentDisplay.GRAPHIC_ONLY);
     }
 
@@ -1576,7 +1579,7 @@ public class UIManager {
         
         String title = textStr.replace(" ▼", "").replace(" ▲", "");
         boolean isVisible = textStr.contains("▲");
-        updateSidebarMainButton(btn, title, isVisible);
+        updateSidebarMainButton(btn, title, isVisible, sidebarBox);
 
         return btn;
     }
