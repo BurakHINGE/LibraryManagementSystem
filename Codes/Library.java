@@ -1,3 +1,4 @@
+import java.nio.channels.Pipe;
 import java.util.ArrayList;
 
 public class Library {
@@ -7,7 +8,6 @@ public class Library {
     
     public Library() {
         books = JsonManager.loadLibraryBooks();
-        nextLoanID = 1;
     }
 
     public boolean addBook(LibraryBook book) { // Add book to library
@@ -163,5 +163,9 @@ public class Library {
     
     public ArrayList<LibraryBook> getBooks() {
         return books;
+    }
+
+    public void setNextLoanID(int nextLoanID) {
+        this.nextLoanID = nextLoanID;
     }
 }
