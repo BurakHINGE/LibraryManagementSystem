@@ -66,7 +66,7 @@ public class UIManager {
         applyScaling(registerButton, 0.2, 0.08, 0.025);
         applyScaling(exitButton, 0.15, 0.06, 0.02);
 
-        loginButton.setOnAction(e -> showLayer(showLoginMenu()));
+        loginButton.setOnAction(e -> showLayer(showLoginMenu("")));
         registerButton.setOnAction(e -> showLayer(showRegisterMenu()));
         exitButton.setOnAction(e -> {
             if (auth != null && auth.getUsers() != null) {
@@ -86,7 +86,7 @@ public class UIManager {
     // =========================================================
     // LOGIN
     // =========================================================
-    public StackPane showLoginMenu() {
+    public StackPane showLoginMenu(String infoMessage) {
 
         StackPane baseLayout = new StackPane();
         
@@ -108,6 +108,11 @@ public class UIManager {
 
         Label errorLabel = new Label();
         errorLabel.styleProperty().bind(Bindings.concat("-fx-font-size: ", rootPane.heightProperty().multiply(0.02).asString(), "px; -fx-text-fill: red;"));
+        
+        if (infoMessage != null && !infoMessage.isEmpty()) {
+            errorLabel.setText(infoMessage);
+            errorLabel.styleProperty().bind(Bindings.concat("-fx-font-size: ", rootPane.heightProperty().multiply(0.02).asString(), "px; -fx-text-fill: green;"));
+        }
 
         usernameField.textProperty().addListener((obs, oldValue, newValue) -> {
             if (newValue.contains(" ")) {
@@ -281,8 +286,7 @@ public class UIManager {
             boolean registered = auth.register(username, password);
             
             if (registered) {
-                errorLabel.setText("Registration successful!");
-                errorLabel.setStyle("-fx-text-fill: green;");
+                showLayer(showLoginMenu("Registration successful! You can now login."));
             } else {
                 errorLabel.setText("Registration failed.");
             }
